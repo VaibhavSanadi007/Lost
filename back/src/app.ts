@@ -26,7 +26,7 @@ import jwt from "jsonwebtoken";
 
 const port = process.env.PORT || 8000;
 
-const allowedOrigin: string = `http://localhost:5173`;
+const allowedOrigin: string = `https://lost-1-eo63.onrender.com`;
 const app = express();
 
 app.use(express.json());
