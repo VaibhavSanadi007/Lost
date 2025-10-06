@@ -11,6 +11,8 @@ import CommentsSection from "./AuthPage/CommentsSection";
 import LikesSection from "./AuthPage/LikesSection";
 import getUserData from "../custom_component/GetUserData"
 
+import { url } from "../App";
+
 const Home = () => {
   
   
@@ -21,7 +23,7 @@ const Home = () => {
   const userFeed = useSelector((item: RootState) => item.post);
   
   const getFeed = async () => {
-    const { data } = await axios.get("http://localhost:3000/post/feed", {
+    const { data } = await axios.get(`${url}/post/feed`, {
       withCredentials: true,
     });
     dispatch(addPost(data.data));
