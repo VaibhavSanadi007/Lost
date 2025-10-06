@@ -3,6 +3,8 @@ import Sidebar from "./Sidebar"
 import axios from "axios";
 import { useEffect, useState } from "react";
 
+import { url } from "../App";
+
 export type miniObj = {
   _id:string;
   name:string;
@@ -22,7 +24,7 @@ const [value,setvalue] = useState<objType[]>([]);
 
 const handleMsgList = async ()=>{
   
-  await axios.get(`http://localhost:3000/user/${userId}/following`,{withCredentials:true}).then(({data})=>{
+  await axios.get(`${url}/user/${userId}/following`,{withCredentials:true}).then(({data})=>{
     setvalue(data.data);
   })
 
