@@ -122,7 +122,7 @@ const httpServer = createServer(app);
 socketServer(httpServer);
 
 connectDB().then(() => {
-  httpServer.listen(3000, () => {
+  httpServer.listen(port, () => {
     console.log("Server is running at port 3000");
   });
 });
