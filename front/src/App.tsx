@@ -1,6 +1,6 @@
 import MainRoutes from "./routes/MainRoutes"
 
-export const url = `http://localhost:3000`;
+export const url = `https://lost-gij7.onrender.com`;
 
 const App = () => {
   
