@@ -53,7 +53,7 @@ const EditProfileModal: FC<property> = ({ setopen }) => {
     }
 
     const {data} = await axios.patch(
-      ` ${url}/user/userId`,
+      ` ${url}/user/${userId}`,
       formData,
       {
         withCredentials: true,
