@@ -26,6 +26,7 @@ const Home = () => {
     const { data } = await axios.get(`${url}/post/feed`, {
       withCredentials: true,
     });
+    console.log(data.data);
     dispatch(addPost(data.data));
   };
   
