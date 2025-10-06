@@ -5,6 +5,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { CiImageOn } from "react-icons/ci";
 
+import { url } from "../App";
+
 const PostCreateCard = () => {
   const navigate = useNavigate();
   const [description, setdescription] = useState<string>("");
@@ -28,7 +30,7 @@ const PostCreateCard = () => {
     formdata.append("file", file);
     formdata.append("postType",mediaType);
 
-    await axios.post(`http://localhost:3000/post/create`, formdata, {
+    await axios.post(`${url}/post/create`, formdata, {
       withCredentials: true,
     });
     navigate("/home");
@@ -39,7 +41,7 @@ const PostCreateCard = () => {
     const formdata = new FormData();
     formdata.append("file", file);
     const { data } = await axios.post(
-      `http://localhost:3000/post/getcaption`,
+      `${url}/post/getcaption`,
       formdata,
       { withCredentials: true }
     );
