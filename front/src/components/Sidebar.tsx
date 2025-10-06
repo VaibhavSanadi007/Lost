@@ -15,12 +15,14 @@ import {  MdLogout } from "react-icons/md";
 import { PiImage } from "react-icons/pi";
 import { CiStar } from "react-icons/ci";
 
+import { url } from "../App";
+
 const Sidebar = () => {
   const userData = useSelector((item: RootState) => item.user);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    const data = await axios.get("http://localhost:3000/auth/logout", {
+    const data = await axios.get(`${url}/auth/logout`, {
       withCredentials: true,
     });
     navigate(`/`);
