@@ -23,9 +23,10 @@ const Home = () => {
   const userFeed = useSelector((item: RootState) => item.post);
   
   const getFeed = async () => {
-    const { data } = await axios.get("http://localhost:3000/post/feed", {
+    const { data } = await axios.get(`${url}/post/feed`, {
       withCredentials: true,
     });
+    console.log(data.data);
     dispatch(addPost(data.data));
   };
   

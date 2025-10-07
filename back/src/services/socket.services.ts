@@ -8,7 +8,7 @@ const getRoomId = (senderid: string, recieverid: string) => {
 export const socketServer = async (httpServer: object) => {
   const io = new Server(httpServer, {
     cors: {
-      origin: `http://localhost:5173`,
+      origin: `https://lost-1-eo63.onrender.com`,
       credentials: true,
     },
   });

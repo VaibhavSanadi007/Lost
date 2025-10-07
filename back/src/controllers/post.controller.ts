@@ -249,6 +249,7 @@ export const getuserPosts = async (req: Request, res: Response) => {
 
 export const getFeed = async (req: Request, res: Response) => {
   try {
+   
 
     const data = await postModel
       .find()

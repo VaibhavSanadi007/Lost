@@ -24,7 +24,7 @@ const [value,setvalue] = useState<objType[]>([]);
 
 const handleMsgList = async ()=>{
   
-  await axios.get(`http://localhost:3000/user/${userId}/following`,{withCredentials:true}).then(({data})=>{
+  await axios.get(`${url}/user/${userId}/following`,{withCredentials:true}).then(({data})=>{
     setvalue(data.data);
   })
 

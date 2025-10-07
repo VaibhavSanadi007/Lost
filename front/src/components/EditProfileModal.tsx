@@ -5,9 +5,7 @@ import { useParams } from "react-router-dom";
 import { addUser } from "../store/userSlice";
 
 import defaultIcon from '../assets/default_profile_pic.jpg';
-
 import { url } from "../App";
-
 type property = {
   setopen: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -55,7 +53,7 @@ const EditProfileModal: FC<property> = ({ setopen }) => {
     }
 
     const {data} = await axios.patch(
-      "http://localhost:3000/user/" + userId,
+      ` ${url}/user/${userId}`,
       formData,
       {
         withCredentials: true,

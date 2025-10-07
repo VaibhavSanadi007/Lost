@@ -10,6 +10,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addUser } from "../../store/userSlice";
 import { toast } from "react-toastify";
+
+import { url } from "../../App";
+
 const SignIn = () => {
   const navigate = useNavigate();
   const disptach = useDispatch();
@@ -22,7 +25,7 @@ const SignIn = () => {
     const handleLogin = async () => {
     try {
       const { data } = await axios.post(
-        "http://localhost:3000/auth/login",
+        `${url}/auth/login`,
         {
           email,
           password,
@@ -34,7 +37,7 @@ const SignIn = () => {
       navigate(`/home`);
       disptach(addUser(data.data));
       toast.success("Welcome Back!!")
-      console.log(data.data)
+ 
     } catch (err:any) {
       console.log("Error :",err);
       toast.error(err.response.data.message)

@@ -10,7 +10,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addUser } from "../../store/userSlice";
 import { toast } from "react-toastify";
-// import { url } from "../../App";
+import { url } from "../../App";
 const SignUp = () => {
   const navigate = useNavigate();
   const disptach = useDispatch();
@@ -23,7 +23,7 @@ const SignUp = () => {
    const handleRegister = async () => {
     try {
       const { data } = await axios.post(
-        "http://localhost:3000/auth/register",
+       `${url}/auth/register`,
         {
           username,
           email,
