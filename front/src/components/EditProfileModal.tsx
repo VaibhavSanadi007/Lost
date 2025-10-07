@@ -6,6 +6,8 @@ import { addUser } from "../store/userSlice";
 
 import defaultIcon from '../assets/default_profile_pic.jpg';
 
+import { url } from "../App";
+
 type property = {
   setopen: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -27,8 +29,8 @@ const EditProfileModal: FC<property> = ({ setopen }) => {
     if (e.target.files && e.target.files.length > 0) {
       setfile(e.target.files[0]);
       const imgFile = e.target.files?.[0];
-      const url = URL.createObjectURL(imgFile);
-      setImageUrl(url);
+      const url1 = URL.createObjectURL(imgFile);
+      setImageUrl(url1);
     }
   };
 

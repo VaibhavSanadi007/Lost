@@ -3,6 +3,8 @@ import Sidebar from "./Sidebar"
 import axios from "axios";
 import { useEffect, useState } from "react";
 
+import { url } from "../App";
+
 export type miniObj = {
   _id:string;
   name:string;

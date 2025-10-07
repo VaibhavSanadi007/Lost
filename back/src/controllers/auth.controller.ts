@@ -82,10 +82,11 @@ export const authLogin = async (req: Request, res: Response) => {
   );
 
   res.cookie("token", token, {
-    httpOnly: true,
-    secure: true,
-    maxAge: 24 * 60 * 60 * 1000,
-  });
+  httpOnly: true,
+  secure: true,          // true because Render uses HTTPS
+  sameSite: "none",      // ✅ allows cross-site cookie sharing
+  maxAge: 24 * 60 * 60 * 1000, // 1 day
+});
 
   return res.status(200).json({
     message: "Login Successful",

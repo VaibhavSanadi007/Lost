@@ -1,10 +1,8 @@
 import MainRoutes from "./routes/MainRoutes"
 
-export const url = `http://localhost:3000`;
+export const url = import.meta.env.VITE_backUrl;
 
 const App = () => {
-  
-  
 
   return (
     // bg-gradient-to-r from-slate-900 to-slate-700

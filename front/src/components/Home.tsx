@@ -11,6 +11,8 @@ import CommentsSection from "./AuthPage/CommentsSection";
 import LikesSection from "./AuthPage/LikesSection";
 import getUserData from "../custom_component/GetUserData"
 
+import { url } from "../App";
+
 const Home = () => {
   
   

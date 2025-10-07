@@ -5,6 +5,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { CiImageOn } from "react-icons/ci";
 
+import { url } from "../App";
+
 const PostCreateCard = () => {
   const navigate = useNavigate();
   const [description, setdescription] = useState<string>("");

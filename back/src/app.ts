@@ -13,11 +13,12 @@ import commentRouter from "./routes/comment.routers.js";
 import { socketServer } from "./services/socket.services.js";
 import chatRouter from "./routes/chat.router.js";
 // import nodemailer from 'nodemailer';
-// const limiter = rateLimit({
-//    windowMs: 15 * 60 * 1000,
-//   max: 100,
-//   message: "too many attempts plz try again later",
-// });
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: "too many attempts plz try again later",
+});
 
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
@@ -26,7 +27,6 @@ import jwt from "jsonwebtoken";
 
 const port = process.env.PORT || 8000;
 
-const allowedOrigin: string = `http://localhost:5173`;
 const app = express();
 
 app.use(express.json());
@@ -34,12 +34,12 @@ app.use(cookieparser());
 app.use(helmet());
 app.use(
   cors({
-    origin: allowedOrigin,
+    origin: process.env.frontURL,
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true,
   })
 );
-// app.use(limiter);
+app.use(limiter);
 
 // const transporter = nodemailer.createTransport({
 //   host: `smtp.gmail.com`,
@@ -108,7 +108,7 @@ app.get(
       maxAge: 24 * 60 * 60 * 1000,
     });
 
-   return res.redirect(`http://localhost:5173/home?token=${token}`);
+    return res.redirect(`http://localhost:5173/home?token=${token}`);
   }
 );
 
