@@ -5,38 +5,51 @@ import redis from "../databases/redis.js";
 import { imageSize } from "image-size";
 import generateCaption from "../services/ai_caption.service.js";
 
+// import imageCompression from "browser-image-compression";
+
 export const createPost = async (req: Request, res: Response) => {
   try {
-    const { postDescription, postTags , postType } = req.body;
+    const { postDescription, postTags, postType } = req.body;
 
     if (!req.file?.buffer) {
       return res.status(400).json({ error: "No file uploaded" });
     }
 
-    if(postType === 'Image'){
-
+    if (postType === "Image") {
       const dimensions = imageSize(req.file.buffer);
-  
-      console.log('dime', dimensions);
-  
+
+      
       const maxWidth = 10000;
       const maxHeight = 10000;
-  
+      
       const minWidth = 100;
       const minHeight = 100;
-  
-      if (dimensions.width<minWidth || dimensions.height<minHeight || dimensions.width > maxWidth || dimensions.height > maxHeight) {
-        return res.status(400).json({ error: "Image dimensions too large or too small" });
+      
+      if (
+        dimensions.width < minWidth ||
+        dimensions.height < minHeight ||
+        dimensions.width > maxWidth ||
+        dimensions.height > maxHeight
+      ) {
+        return res
+          .status(400)
+          .json({ error: "Image dimensions too large or too small" });
+        }
       }
+      
+      const userFile = req.file;
+      
+      if (!userFile) {
+        return res.status(400).json({ message: "no file uploaded " });
+      }
+      
+      // const options = {
+      //   maxSizeMB: 2, // compress to around 2MB
+      //   maxWidthOrHeight: 1920,
+      //   useWebWorker: true,
+      // };
 
-    }
-
-    const userFile = req.file;
-
-    if (!userFile) {
-      return res.status(400).json({ message: "no file uploaded " });
-    }
-
+      // const compressedFile = await imageCompression(userFile,options);
 
     const ArrayOfPost = postTags.split(" ");
 
@@ -52,7 +65,7 @@ export const createPost = async (req: Request, res: Response) => {
       postUrl: uploadResponse.url,
       postDescription: postDescription ? postDescription : "",
       postTags: ArrayOfPost,
-      postType
+      postType,
     });
 
     res.json({
@@ -118,8 +131,7 @@ export const editPost = async (req: Request, res: Response) => {
 
 export const LikePost = async (req: Request, res: Response) => {
   try {
-    const {postId} = req.body;
-   
+    const { postId } = req.body;
 
     const LikeObj = await postModel.findById(postId).select("like");
 
@@ -149,7 +161,7 @@ export const LikePost = async (req: Request, res: Response) => {
 
 export const UnLikePost = async (req: Request, res: Response) => {
   try {
-    const {postId} = req.body;
+    const { postId } = req.body;
 
     const LikeObj = await postModel.findById(postId).select("like");
 
@@ -172,7 +184,6 @@ export const UnLikePost = async (req: Request, res: Response) => {
       message: "unlike updated successful! 🎉",
       data,
     });
-
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
@@ -232,7 +243,8 @@ export const getuserPosts = async (req: Request, res: Response) => {
 
     const data = await postModel
       .find({ postUserId: userID })
-      .select("postUrl postDescription postTags postType").sort({createdAt:-1});
+      .select("postUrl postDescription postTags postType")
+      .sort({ createdAt: -1 });
 
     const cleanData = JSON.stringify(data);
     // redis.set("users_post:" + userID, cleanData, "EX", 100);
@@ -249,8 +261,6 @@ export const getuserPosts = async (req: Request, res: Response) => {
 
 export const getFeed = async (req: Request, res: Response) => {
   try {
-   
-
     const data = await postModel
       .find()
       .sort({ createdAt: -1 })
@@ -269,16 +279,14 @@ export const getFeed = async (req: Request, res: Response) => {
 
 //under construction infinite pagination add sikhenge fir banayenge
 
-
 export const getCaption = async (req: Request, res: Response) => {
   try {
-
     const file = req.file;
 
     let base64Image: string;
 
-    if(file?.buffer){
-      base64Image = Buffer.from(file?.buffer).toString('base64');
+    if (file?.buffer) {
+      base64Image = Buffer.from(file?.buffer).toString("base64");
 
       const caption = await generateCaption(base64Image);
 
@@ -288,7 +296,6 @@ export const getCaption = async (req: Request, res: Response) => {
         caption,
       });
     }
-    
   } catch (error) {
     res.status(500).json({ message: "Server error 1", error });
   }

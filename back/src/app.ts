@@ -13,6 +13,7 @@ import commentRouter from "./routes/comment.routers.js";
 import { socketServer } from "./services/socket.services.js";
 import chatRouter from "./routes/chat.router.js";
 // import nodemailer from 'nodemailer';
+import compression from 'compression';
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -40,7 +41,16 @@ app.use(
   })
 );
 app.use(limiter);
-
+app.use(compression({
+  level:6,
+  threshold:10*100,
+  filter:(req,res)=>{
+    if(req.headers[`x-no-compression`]){
+      return false;
+    }
+    return compression.filter(req,res);
+  },
+}))
 // const transporter = nodemailer.createTransport({
 //   host: `smtp.gmail.com`,
 //   port: 587,
