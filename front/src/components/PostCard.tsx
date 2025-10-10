@@ -13,6 +13,8 @@ import { url } from "../App";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { addComment } from "../store/commentSlice";
+import defaultIcon from '../assets/default_profile_pic.jpg';
 export type property = {
   items: ObjType;
   setflag: React.Dispatch<React.SetStateAction<string>>;
@@ -77,19 +79,30 @@ const PostCard: FC<property> = ({ items, setflag, setPostId }) => {
         }
       )
       .then(({ data }) => {
-        console.log(data);
+        const commentData = data.data;
+        dispatch(addComment({
+          _id: commentData._id,
+          commentText:commentData.commentText,
+          commentUserId: {
+            _id: commentData.commentUserId._id,
+            name: commentData.commentUserId.name,
+            username: commentData.commentUserId.username,
+            dp: commentData.commentUserId.dp,
+          },
+          postId: commentData.postId,
+          createdAt: commentData.createdAt,
+        }));
+        setcommentInput("");
       });
-
-    setcommentInput("");
   };
-
+  console.log(items.postTags)
   return (
     <article className="  border border-gray-200 rounded-2xl  xl:w-140  overflow-hidden ">
       {/* Header */}
       <div className="xl:h-17 h-15 px-4 xl:px-8 flex items-center gap-3">
         <div className="h-13 w-13 rounded-2xl overflow-hidden active:scale-95 cursor-pointer">
           <img
-            src={items.postUserId.dp}
+            src={items.postUserId.dp?items.postUserId.dp:defaultIcon}
             className="h-full w-full object-cover  "
             onClick={() => navigate(`/viewuser/${items.postUserId._id}`)}
           />
@@ -119,11 +132,11 @@ const PostCard: FC<property> = ({ items, setflag, setPostId }) => {
         <p className="text-sm  ">
           {items.postDescription}
           <br />
-          {items.postTags?.map((items, index) => (
+          {items.postTags ? items.postTags?.map((items, index) => (
             <span key={index} className="text-blue-800">
               {items}
             </span>
-          ))}
+          )) : ''}
         </p>
 
         {!items.postType || items.postType === "Image" ? (

@@ -1,35 +1,37 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { url } from "../App";
-import type { ObjType } from "../store/postSlice";
 
-const UserProfilePosts = () => {
-  const [value, setvalue] = useState<ObjType[]>([]);
-  const { userId } = useParams();
+import type { FC } from 'react';
+import defaulticon from '../assets/default_profile_pic.jpg';
+import type { ObjType } from '../store/postSlice';
 
-  const handleGetPosts = async () => {
-    const { data } = await axios.get(`${url}/post/userposts/${userId}`, {
-      withCredentials: true,
-    });
+type property = {
+  value : ObjType[];
+}
 
-    setvalue([...data.data]);
-  };
+const UserProfilePosts:FC<property> = ({value}) => {
 
-  useEffect(() => {
-    handleGetPosts();
-  }, []);
 
   return (
     <div className="text-white flex items-center justify-center xl:mt-5">
       <div className="grid grid-cols-3 xl:gap-2 xl:w-[60%] ">
         {value &&
           value.map((item, index) => (
-            <div key={index} className="w-full  rounded-2xl overflow-hidden ">
-              <img
-                className="xl:max-h-100 xl:h-full xl:w-full rounded-2xl overflow-hidden  object-cover "
-                src={item.postUrl}
-              />
+           <div
+              key={index}
+              className="w-full rounded overflow-hidden"
+            
+            >
+              {!item.postType || item.postType === "Image" ? (
+                <img
+                  className="xl:max-h-80 xl:h-full xl:w-full  overflow-hidden  object-contain "
+                  src={item.postUrl? item.postUrl : defaulticon}
+                />
+              ) : (
+                <div className="w-full h-full flex justify-center items-center rounded-2xl   ">
+                  <video controls  width={500} >
+                    <source src={item.postUrl?item.postUrl:defaulticon} type="video/mp4" />
+                  </video>
+                </div>
+              )}
             </div>
           ))}
       </div>

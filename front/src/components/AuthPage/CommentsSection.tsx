@@ -4,31 +4,18 @@ import { useEffect, useState, type FC } from "react";
 import moment from "moment";
 import { CiMenuKebab } from "react-icons/ci";
 import type { menuType } from "../MessageBox";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../../store/reduxStore";
+import { deleteComment, editComment, InitializeComment } from "../../store/commentSlice";
 type property = {
   postId: string;
 };
 
-type miniObj = {
-  _id: string;
-  username: string;
-  dp: string;
-  name: string;
-};
-
-type obj = {
-  _id: string;
-  commentUserId: miniObj;
-  postId: string;
-  commentText: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
 const CommentsSection: FC<property> = ({ postId }) => {
   const userData = useSelector((item:RootState)=>item.user);
-  const [commentArr, setCommentArr] = useState<obj[]>();
+  const commentData = useSelector((item:RootState)=>item.comment);
+  
+  const disptach = useDispatch();
   const [commentId,setCommentId] = useState<string>('');
   const [editBoxOpen,setEditBoxOpen] = useState<boolean>(false);
    const [EditInput, setEditInput] = useState<string>("");
@@ -73,13 +60,15 @@ const [commentOpen, setCommentOpen] = useState<menuType>({
     const { data } = await axios.get(`${url}/comment/fetch/${postId}`, {
       withCredentials: true,
     });
-    setCommentArr(data.data);
+    disptach(InitializeComment(data.data));
+ 
   };
 
   const handleCommentDelete = async (commentId:string)=>{
     await axios.delete(`${url}/comment/delete/${commentId}`,{
       withCredentials:true,
     });
+    disptach(deleteComment(commentId));
     handleMenuClose();
   }
 
@@ -90,6 +79,10 @@ const [commentOpen, setCommentOpen] = useState<menuType>({
     },{
       withCredentials:true,
     });
+    disptach(editComment({
+    _id: commentId,
+      commentText:EditInput
+    }))
     setEditBoxOpen(false); 
   }
 
@@ -103,7 +96,11 @@ const [commentOpen, setCommentOpen] = useState<menuType>({
         <h1 className="border-b border-b-gray-200 xl:px-3 xl:py-1.5 font-semibold">
           Comments
         </h1>
-        {commentArr?.map((items, index) => (
+        {
+
+        commentData.length===0?
+        <h1 className="text-center py-4">No comments 🫠</h1>
+        : commentData?.map((items, index) => (
           <div
             key={index}
             className="flex items-center gap-4 xl:gap-2 my-2.5 xl:my-2.5 xl:px-1 xl:pr-5 xl:py-1.5 bg-gray-100 rounded-2xl"

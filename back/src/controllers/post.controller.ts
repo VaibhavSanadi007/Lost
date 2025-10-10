@@ -4,19 +4,26 @@ import postModel from "../models/post.model.js";
 import redis from "../databases/redis.js";
 import { imageSize } from "image-size";
 import generateCaption from "../services/ai_caption.service.js";
+import followModel from "../models/follow.model.js";
 
 // import imageCompression from "browser-image-compression";
 
 export const createPost = async (req: Request, res: Response) => {
   try {
     const { postDescription, postTags, postType } = req.body;
+    
+    const userFile = req.file;
+    
+    if (!userFile) {
+      return res.status(400).json({ message: "no file uploaded " });
+    }
 
-    if (!req.file?.buffer) {
+    if (!userFile?.buffer) {
       return res.status(400).json({ error: "No file uploaded" });
     }
 
     if (postType === "Image") {
-      const dimensions = imageSize(req.file.buffer);
+      const dimensions = imageSize(userFile.buffer);
 
       
       const maxWidth = 10000;
@@ -37,11 +44,6 @@ export const createPost = async (req: Request, res: Response) => {
         }
       }
       
-      const userFile = req.file;
-      
-      if (!userFile) {
-        return res.status(400).json({ message: "no file uploaded " });
-      }
       
       // const options = {
       //   maxSizeMB: 2, // compress to around 2MB
@@ -58,6 +60,8 @@ export const createPost = async (req: Request, res: Response) => {
       fileName: userFile?.originalname as string,
       folder: "/social/",
     });
+    
+    console.log(uploadResponse)
 
     const data = await postModel.create({
       postUserId: req.user?.id,
@@ -261,8 +265,17 @@ export const getuserPosts = async (req: Request, res: Response) => {
 
 export const getFeed = async (req: Request, res: Response) => {
   try {
+
+    const userId = req.user?.id;
+
+     const followingData = await followModel
+          .find({ followingId: userId })
+          .populate("followerId", "_id username").select('followerId');
+
+    const ids = followingData.map((item)=> item.followerId._id); 
+    ids.push(userId);
     const data = await postModel
-      .find()
+      .find({postUserId: {$in:ids}})
       .sort({ createdAt: -1 })
       .limit(20)
       .populate("postUserId", "username name dp");

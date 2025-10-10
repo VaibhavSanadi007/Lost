@@ -8,7 +8,7 @@ const getRoomId = (senderid: string, recieverid: string) => {
 export const socketServer = async (httpServer: object) => {
   const io = new Server(httpServer, {
     cors: {
-      origin: `https://lost-1-eo63.onrender.com`,
+      origin: process.env.frontURL,
       credentials: true,
     },
   });
@@ -21,7 +21,6 @@ export const socketServer = async (httpServer: object) => {
 
     socket.on("Chat", async ({ senderId, receiverId, message }) => {
       try {
-        console.log(message, "_", senderId, "_", receiverId);
         if (!message || !senderId || !receiverId) {
           throw new Error("invalid chat");
         }

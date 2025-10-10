@@ -35,7 +35,10 @@ const LikesSection: FC<property> = ({ postId }) => {
           Likes
         </h1>
 
-        {likeArr.map((item, index) => (
+        {
+             likeArr.length===0?
+        <h1 className="text-center py-4">No Likes 🫠</h1>
+          :likeArr.map((item, index) => (
           <div
             key={index}
             className="flex xl:gap-2  my-2 xl:my-2.5  xl:px-2.5 py-1.5 xl:py-1.5 bg-gray-100 rounded-2xl"

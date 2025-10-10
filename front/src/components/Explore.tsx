@@ -17,7 +17,7 @@ const Explore = () => {
   const navigate = useNavigate();
   const [recommend, setRecommend] = useState<obj[]>([]);
   const [searchResult, setSearchResult] = useState<obj[]>([]);
-  const [searchInput,setSearchInput] = useState<string>('');
+  const [searchInput,setSearchInput] = useState<string  | null>(null);
   const handleGetRecommend = async () => {
     const { data } = await axios.get(`${url}/user/recommend`, {
       withCredentials: true,
@@ -63,7 +63,7 @@ const Explore = () => {
             className="w-50 h-13 xl:w-80 bg-gray-200 outline-none xl:py-2  px-3 rounded-2xl"
           />
 
-         { searchInput && <div className="absolute h-125 xl:w-100 lg:w-80 lg:left-[30%] xl:left-[45%] 2xl:left-[35%] lg:top-10 xl:top-5 rounded-2xl overflow-hidden bg-black  xl:px-2  overflow-y-auto scrollbar-hide ">
+         { searchInput && <div data-lenis-prevent className="absolute  h-125 xl:w-100 lg:w-80 lg:left-[30%] xl:left-[45%] 2xl:left-[35%] lg:top-10 xl:top-5 rounded-2xl overflow-hidden bg-black  xl:px-2  overflow-y-auto scrollbar-hide">
             {
               searchResult && searchResult.map((item,index)=>(
 

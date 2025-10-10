@@ -41,7 +41,7 @@ const postSlice = createSlice({
         post.postDescription = action.payload.description;
       }
       if (post && action.payload.tags) {
-        post.postTags = action.payload.tags;
+        post.postTags = action.payload.tags.split(' ');
       }
     },
     addLike: (state, action) => {

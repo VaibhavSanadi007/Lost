@@ -18,7 +18,7 @@ export const createComment = async (req: Request, res: Response) => {
     
     await commentData.save();
 
-    const data = await commentData.populate('commentUserId','username');
+    const data = await commentData.populate('commentUserId','username name dp');
 
      res.json({
       success: true,

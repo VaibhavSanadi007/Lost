@@ -9,12 +9,13 @@ import { useEffect, useState } from "react";
 import { addPost } from "../store/postSlice";
 import CommentsSection from "./AuthPage/CommentsSection";
 import LikesSection from "./AuthPage/LikesSection";
-import getUserData from "../custom_component/GetUserData"
 
 import { url } from "../App";
+import StoryModal from "./StoryModal";
 
 const Home = () => {
   
+  const [storyModalFlag,setStoryModalFlag] = useState<boolean>(false);
   
   const [flag, setflag] = useState<string>("");
   const [postId, setPostId] = useState<string>("");
@@ -22,11 +23,10 @@ const Home = () => {
   const dispatch = useDispatch();
   const userFeed = useSelector((item: RootState) => item.post);
   
-  const getFeed = async () => {
+ const getFeed = async () => {
     const { data } = await axios.get(`${url}/post/feed`, {
       withCredentials: true,
     });
-    console.log(data.data);
     dispatch(addPost(data.data));
   };
   
@@ -38,13 +38,12 @@ const Home = () => {
     // console.log(token);
   }, []);
   
-  getUserData();
   
   return (
-    <div className="h-full w-full flex justify-center xl:gap-10 xl:px-25 px-1">
+    <div className="h-full w-full flex justify-center xl:gap-10 xl:px-25 px-1 ">
       <Sidebar />
       <div className="h-fit md:w-[50%] flex flex-col items-center md:ml-50 lg:ml-50 xl:ml-100 ">
-        <StoryRow />
+        <StoryRow setStoryModalFlag={setStoryModalFlag}  />
         <div className="flex flex-col gap-4 xl:gap-5">
           {userFeed.map((item, index) => {
             return (
@@ -66,6 +65,9 @@ const Home = () => {
       ) : null}
 
       <RightTrail flag={flag} />
+
+      {storyModalFlag && <StoryModal setStoryModalFlag={setStoryModalFlag}/>}
+
     </div>
   );
 };

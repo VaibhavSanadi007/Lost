@@ -299,7 +299,7 @@ const MessageBox = () => {
                   items.senderId === myid ? "justify-end" : "justify-start"
                 }  `}
               >
-                {items.senderId !== myid && <img src={value.dp} className="h-8 w-8 rounded-xl xl:h-8 xl:w-8 object-cover xl:rounded-2xl"/>}
+                {items.senderId !== myid && <img src={value.dp ? value.dp : defaultIcon} className="h-8 w-8 rounded-xl xl:h-8 xl:w-8 object-cover xl:rounded-2xl"/>}
                 <h1
                   id={items._id}
                   onContextMenu={(e) =>
@@ -311,7 +311,7 @@ const MessageBox = () => {
                 >
                   {items.message}
                 </h1>
-                 {items.senderId === myid && <img src={UserData.dp} className="h-8 w-8 rounded-xl xl:h-8 xl:w-8 object-cover xl:rounded-2xl"/>}
+                 {items.senderId === myid && <img src={UserData.dp? UserData.dp : defaultIcon} className="h-8 w-8 rounded-xl xl:h-8 xl:w-8 object-cover xl:rounded-2xl"/>}
               </div>
             ))}
         </div>

@@ -11,13 +11,14 @@ type property = {
   setOpenPostModal: React.Dispatch<React.SetStateAction<boolean>>;
   postId: string;
   postUrl: string;
+  postDescription: string | undefined;
 };
 
 
-const OpenPostModal: FC<property> = ({ setOpenPostModal , postId , postUrl}) => {
+const OpenPostModal: FC<property> = ({ setOpenPostModal , postId , postUrl , postDescription  }) => {
   
-    const [description, setdescription] = useState<string>("");
-    const [tags, settags] = useState<string>("");
+    const [description, setdescription] = useState<string | undefined>(postDescription);
+    const [tags, settags] = useState<string>(``);
 
   const dispatch = useDispatch();
 
@@ -27,26 +28,25 @@ const OpenPostModal: FC<property> = ({ setOpenPostModal , postId , postUrl}) => 
   }
 
   const handleEditPost = async ()=>{
-    const data =  await axios.patch(`${url}/post/update/${postId}`,{
+     await axios.patch(`${url}/post/update/${postId}`,{
       postDescription:description,
       postTags:tags
     },{withCredentials:true});
     dispatch(editPost({description,tags,postId}))
 
-    console.log(data);
   }
-
+  
 
   return (
     <div
       className=" w-full h-full fixed inset-0 bg-gray-950/85 flex items-center justify-center "
       onClick={() => setOpenPostModal(false)}
     >
-      <div className="xl:w-[40%] absolute  bg-white rounded-2xl xl:py-5 xl:px-4 flex flex-col xl:gap-1.5 justify-between " onClick={(e)=>{
+      <div className="xl:w-[40%] absolute  bg-white rounded-xl xl:py-5 xl:px-10 flex flex-col xl:gap-1.5 justify-between  " onClick={(e)=>{
         e.stopPropagation();
       }}>
 
-        <div className="flex items-center justify-between xl:px-10 ">
+        <div className="flex items-center justify-between ">
 
           <div className="flex items-center xl:gap-2 "  onClick={() => setOpenPostModal(false)}>
             <FaArrowLeftLong size={13} className="text-gray-400"  />
@@ -65,19 +65,19 @@ const OpenPostModal: FC<property> = ({ setOpenPostModal , postId , postUrl}) => 
 
         </div>
 
-        <div className="flex flex-col xl:gap-2">
-          <textarea name="" id="" className="bg-gray-100 resize-none scrollbar-hide outline-none xl:px-2 xl:py-1" placeholder="description" onChange={(e)=>setdescription(e.target.value)}></textarea>
-          <textarea name="" id="" className="bg-gray-100 resize-none scrollbar-hide outline-none xl:px-2 xl:py-1" placeholder="tags" onChange={(e)=>settags(e.target.value)}></textarea>
-        </div>
 
-      <div className="w-full flex items-center justify-center xl:py-2">
-        <label htmlFor="Img">
-        <img src={postUrl?postUrl : defaIcon} className="xl:min-w-100 xl:h-100 object-cover"/>
+      <div className="border rounded-xl h-100 w-full flex items-center justify-center xl:py-4 xl:px-2">
+        <label htmlFor="Img" className="xl:h-full">
+        <img src={postUrl?postUrl : defaIcon} className=" xl:h-full object-contain"/>
         </label>
         <input type="file" name="Img" id="Img" className="hidden" />
       </div>
 
        
+        <div className="flex flex-col xl:gap-2">
+          <textarea name="" value={description} id="" className="border rounded-xl resize-none scrollbar-hide outline-none xl:px-2 xl:py-1" placeholder="description" onChange={(e)=>setdescription(e.target.value)}></textarea>
+          <textarea name="" value={tags} id="" className="border rounded-xl  resize-none scrollbar-hide outline-none xl:px-2 xl:py-1" placeholder="tags" onChange={(e)=>settags(e.target.value)}></textarea>
+        </div>
 
       </div>
       {/* comment like section */}

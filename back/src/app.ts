@@ -14,12 +14,14 @@ import { socketServer } from "./services/socket.services.js";
 import chatRouter from "./routes/chat.router.js";
 // import nodemailer from 'nodemailer';
 import compression from 'compression';
-
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  message: "too many attempts plz try again later",
-});
+import storyRouter from './routes/story.routers.js';
+// const limiter = rateLimit({
+//   windowMs: 15 * 60 * 1000,
+//   max: 100,
+//   message: "too many attempts plz try again later",
+//   standardHeaders: true,
+// legacyHeaders: false,
+// });
 
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
@@ -35,12 +37,12 @@ app.use(cookieparser());
 app.use(helmet());
 app.use(
   cors({
-    origin: process.env.frontURL,
+    origin: process.env.frontURL ,
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true,
   })
 );
-app.use(limiter);
+// app.use(limiter);
 app.use(compression({
   level:6,
   threshold:10*100,
@@ -127,6 +129,7 @@ app.use("/user", userRouter);
 app.use("/post", postRouter);
 app.use("/comment", commentRouter);
 app.use("/msg", chatRouter);
+app.use("/story", storyRouter);
 
 const httpServer = createServer(app);
 socketServer(httpServer);

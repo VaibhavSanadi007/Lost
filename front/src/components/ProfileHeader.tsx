@@ -2,15 +2,26 @@ import type { FC } from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store/reduxStore";
 import editIcon from "../assets/user-edit.png";
+import defaulticon from '../assets/default_profile_pic.jpg';
+import type { ObjType } from "../store/postSlice";
 
 type property = {
   setopen: React.Dispatch<React.SetStateAction<boolean>>;
   setopenFollowers: React.Dispatch<React.SetStateAction<boolean>>;
   setopenFollowing: React.Dispatch<React.SetStateAction<boolean>>;
+  value : ObjType[];
 };
 
-const ProfileHeader: FC<property> = ({ setopen , setopenFollowers , setopenFollowing }) => {
+const ProfileHeader: FC<property> = ({ setopen , setopenFollowers , setopenFollowing , value}) => {
   const items = useSelector((item: RootState) => item.user);
+  // const posts = useSelector((item: RootState)=>item.post);
+
+  // const handleUserPostsLength = ()=>{
+  //   posts.map((item)=>{
+
+  //   })
+  // }
+
   return (
     // Card container
     <section className="bg-gray-100 border-gray-200 rounded-xl overflow-hidden xl:h-fit xl:w-[60%]">
@@ -19,7 +30,7 @@ const ProfileHeader: FC<property> = ({ setopen , setopenFollowers , setopenFollo
         <div className="flex items-center justify-center xl:gap-5 ">
           
           <img
-            src={items.dp}
+            src={items.dp?items.dp:defaulticon}
             className="h-25 w-25 xl:h-40 xl:w-40 object-cover rounded-2xl sm:h-24 sm:w-24  "
           />
           <div className="flex flex-col ">
@@ -65,8 +76,8 @@ const ProfileHeader: FC<property> = ({ setopen , setopenFollowers , setopenFollo
 
         <div className=" xl:h-15 flex  justify-center items-center gap-15 text-sm ">
           <p className="flex flex-col hover:border-b hover:border-gray-300 xl:p-1">
-            <span className="text-2xl text-gray-700 font-bold text-center ">0</span> 
-            <span className="text-gray-400"> Posts </span>
+            <span className="text-2xl text-gray-700 font-bold text-center ">{value.length?value.length:0}</span> 
+            <span className="text-gray-400" > Posts </span>
           </p>
           <p className="flex flex-col cursor-pointer hover:border-b hover:border-gray-300 xl:p-1" onClick={()=>setopenFollowers(true)}>
             <span className="text-2xl text-gray-700 font-bold text-center "  >{items.followers?items.followers.length:"0"}</span>

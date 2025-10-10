@@ -1,20 +1,15 @@
-import type { FC } from "react"
-import {  useSelector } from "react-redux";
-import type { RootState } from "../store/reduxStore";
-import defaultIcon from '../assets/default_profile_pic.jpg';
 import { useNavigate } from "react-router-dom";
-
+import type { ObjType } from "../store/userSlice";
+import type { Dispatch, FC, SetStateAction } from "react";
 
 type property = {
-setopenFollowers : React.Dispatch<React.SetStateAction<boolean>>;
+  setopenFollowers : Dispatch<SetStateAction<boolean>>;
+  followData : ObjType[];
 }
 
-const Followers:FC<property> = ({setopenFollowers}) => {
-
-  const navigate = useNavigate();
-
-  const followData = useSelector((item:RootState)=>item.user.followers);
-
+const ViewFollowers:FC<property> = ({setopenFollowers , followData}) => {
+    const navigate = useNavigate();
+  
   return (
     <div className="fixed  inset-0 z-50 flex  justify-center xl:pt-30" >
       {/* Backdrop */}
@@ -52,4 +47,4 @@ const Followers:FC<property> = ({setopenFollowers}) => {
     </div>
   )
 }
-export default Followers
+export default ViewFollowers

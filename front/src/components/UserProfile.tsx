@@ -1,16 +1,15 @@
 import axios from "axios";
 import { url } from "../App";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FC } from "react";
 import {  type ObjType } from "../store/userSlice";
+import {  type ObjType as postType } from "../store/postSlice";
 import defaultImg from "../assets/default_profile_pic.jpg";
-
-
-const UserProfile = () => {
-  const { userId } = useParams();
- 
-
-  const [value, setvalue] = useState<ObjType>({
+type property = {
+  value : postType[];
+}
+const UserProfile:FC<property> = ({value}) => {
+  const [Uservalue, setUservalue] = useState<ObjType>({
     _id: "",
     username: "",
     name: "",
@@ -24,23 +23,48 @@ const UserProfile = () => {
     following: [],
   });
 
+  const { userId } = useParams();
+  // const targetUserId = value._id;
+
   const handleGetUsersData = async () => {
     const { data } = await axios.get(`${url}/user/${userId}`, {
       withCredentials: true,
     });
-    setvalue(data.data);
+    setUservalue(data.data);
+      handleGetFollower();
+    handleGetFollowing();
   };
-
   const handleFollowUser = async () => {
     await axios.post(`${url}/user/${userId}/follow`,{},{withCredentials:true});
-   
   }
   const handleUnFollowUser = async () => {
    await axios.delete(`${url}/user/${userId}/unfollow`,{withCredentials:true});
   }
+  //from here 
 
+  const handleGetFollowing = async () => {
+    const FollowData = await axios.get(
+      `${url}/user/${userId}/following`,
+      { withCredentials: true }
+    );
+      setUservalue(prev=>({...prev,following:FollowData.data.data}));
+  };
+
+  const handleGetFollower = async () => {
+  const FollowData = await axios.get(
+    `${url}/user/${userId}/followers`,
+    { withCredentials: true }
+  );
+  setUservalue(prev=>({...prev,followers:FollowData.data.data}));
+     
+  };
+
+  
+  
   useEffect(() => {
+    
     handleGetUsersData();
+  
   }, []);
 
   return (
@@ -49,14 +73,14 @@ const UserProfile = () => {
         <div className="px-6 pt-4 pb-6   ">
           <div className="flex items-center justify-center xl:gap-5 ">
             <img
-              src={value.dp ? value.dp : defaultImg}
+              src={Uservalue.dp ? Uservalue.dp : defaultImg}
               className=" xl:h-40 xl:w-40 object-cover rounded-2xl sm:h-24 sm:w-24  "
             />
             <div className="flex flex-col ">
               <div className="">
                 <div className="flex items-center  gap-2 ">
                   <h1 className="text-lg sm:text-xl xl:text-2xl text-gray-700 font-semibold">
-                    {value.username}
+                    {Uservalue.username}
                   </h1>
                   {/* Verified tick as small pill */}
                   <span className="inline-flex h-5 w-5 rounded-full bg-indigo-600 text-white items-center justify-center text-[10px]">
@@ -64,14 +88,14 @@ const UserProfile = () => {
                   </span>
                 </div>
 
-                <p className="text-sm text-gray-500 ">{value.name}</p>
+                <p className="text-sm text-gray-500 ">{Uservalue.name}</p>
               </div>
 
               <p className="mt-3 xl:h-15  text-sm text-gray-700 ">
-                {value.description}
+                {Uservalue.description}
               </p>
 
-              <p className="mt-3 text-sm  text-blue-800 ">{value.tags}</p>
+              <p className="mt-3 text-sm  text-blue-800 ">{Uservalue.tags}</p>
 
               {/* Edit button */}
             </div>
@@ -83,19 +107,19 @@ const UserProfile = () => {
           <div className="mt-4 flex  justify-center items-center gap-10 text-sm">
             <p className="flex flex-col hover:border-b hover:border-gray-300 cursor-pointer xl:p-1">
               <span className="text-2xl text-gray-700 font-bold text-center">
-                2
+                {value.length?value.length:0}
               </span>{" "}
               <span className="text-gray-400"> Posts </span>
             </p>
             <p className="flex flex-col hover:border-b hover:border-gray-300 cursor-pointer xl:p-1">
               <span className="text-2xl text-gray-700 font-bold text-center">
-              0
+              {Uservalue.followers?Uservalue.followers.length:0}
               </span>{" "}
               <span className="text-gray-400"> Followers </span>
             </p>
             <p className="flex flex-col hover:border-b hover:border-gray-300 cursor-pointer xl:p-1">
               <span className="text-2xl text-gray-700 font-bold text-center">
-               0
+               {Uservalue.following?Uservalue.following.length:0}
               </span>{" "}
               <span className="text-gray-400"> Following </span>
             </p>

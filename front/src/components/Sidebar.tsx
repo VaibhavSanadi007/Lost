@@ -13,7 +13,6 @@ import { CgProfile } from "react-icons/cg";
 import { IoSettingsOutline } from "react-icons/io5";
 import {  MdLogout } from "react-icons/md";
 import { PiImage } from "react-icons/pi";
-import { CiStar } from "react-icons/ci";
 
 import { url } from "../App";
 
@@ -44,7 +43,7 @@ const Sidebar = () => {
         </div>
 
         {/* Nav */}
-        <nav className="bg-black backdrop-blur-2xl text-white rounded-xl overflow-hidden xl:pb-2 xl:pt-2 md:py-2 lg:py-2 xl:px-1  md:px-2 cursor-pointer flex flex-col lg:gap-2 xl:gap-1.5 md:gap-2">
+        <nav className="bg-black backdrop-blur-2xl text-white rounded-xl overflow-hidden xl:pb-2 xl:pt-2 md:py-2 lg:py-2 xl:px-1  md:px-2 cursor-pointer flex flex-col lg:gap-2 xl:gap-4 md:gap-2">
           <div className="flex items-center xl:px-2 xl:py-1.5 lg:gap-2 xl:gap-2 rounded-xl hover:bg-white/10" onClick={()=> navigate(`/home`)}>
           <GrHomeRounded size={20} />
           <h1 className="">Feed</h1>
@@ -73,11 +72,11 @@ const Sidebar = () => {
 
         {/* Create Post button */}
         <div className="w-full xl:h-45 md:h-40 md:pb-8 flex items-end xl:pb-8 justify-center">
-          <button
+          {/* <button
             className="xl:w-full rounded-2xl md:h-10 md:px-5 md:w-full xl:h-10 bg-black  text-white  font-medium xl:px-5  flex items-center justify-between"
           >
            Go pro <CiStar className="text-yellow-500" size={20} />
-          </button>
+          </button> */}
         </div>
 
         {/* Mini profile bottom-left */}

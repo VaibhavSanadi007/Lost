@@ -6,3 +6,6 @@
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
 
+[data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
