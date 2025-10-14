@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { CiImageOn } from "react-icons/ci";
 
 import { url } from "../App";
+import { toast } from "react-toastify";
 
 
 const PostCreateCard = () => {
@@ -31,9 +32,13 @@ const PostCreateCard = () => {
     formdata.append("file", file);
     formdata.append("postType",mediaType);
 
-    await axios.post(`${url}/post/create`, formdata, {
+    await toast.promise( axios.post(`${url}/post/create`, formdata, {
       withCredentials: true,
-    });
+    }) ,{
+       pending: "Saving data...",
+        success: "Saved successfully!",
+        error: "Failed to save data!"
+    } )
     navigate("/home");
   };
 

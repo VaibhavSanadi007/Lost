@@ -1,4 +1,28 @@
+import axios from "axios"
+import { url } from "../App"
+import { useState } from "react"
+import { toast } from "react-toastify";
+
 const PasswordChange = () => {
+
+  const [password,setPassword] = useState<string>('');
+  const [newPassword,setNewPassword] = useState<string>('');
+  const [confirmPassword,setConfirmPassword] = useState<string>('');
+
+  const handleReset = async ()=>{
+    await axios.patch(`${url}/auth/reset`,{
+      password,
+      newPassword,
+      confirmPassword
+    },{
+      withCredentials:true
+    })
+    toast.success("password updated ⚡");
+    setPassword('')
+    setNewPassword('')
+    setConfirmPassword('')
+  }
+
   return (
     <div className="w-1/2 h-130 border border-gray-200 rounded-2xl px-10 py-5 flex flex-col gap-4">
       <h1 className="text-3xl font-semibold">Change password</h1>
@@ -6,18 +30,18 @@ const PasswordChange = () => {
       <div className="flex flex-col gap-5" >
        <div className="flex flex-col gap-0.5">
          <label htmlFor="current">Current Password</label>
-        <input type="password"  className="border border-gray-200 h-10 rounded-xl px-2 outline-none" id="current" placeholder="enter your current password" />
+        <input type="password" value={password}  className="border border-gray-200 h-10 rounded-xl px-2 outline-none" id="current" placeholder="enter your current password" onChange={(e)=>setPassword(e.target.value)} />
        </div>
        <div className="flex flex-col gap-0.5">
          <label htmlFor="current">New Password</label>
-        <input type="password"  className="border border-gray-200 h-10 rounded-xl px-2 outline-none" id="new" placeholder="enter your new password"/>
+        <input type="password" value={newPassword}  className="border border-gray-200 h-10 rounded-xl px-2 outline-none" id="new" placeholder="enter your new password" onChange={(e)=>setNewPassword(e.target.value)}/>
        </div>
        <div className="flex flex-col gap-0.5">
          <label htmlFor="current">Confirm Password</label>
-        <input type="password"  className="border border-gray-200 h-10 rounded-xl px-2 outline-none" id="confirm" placeholder="enter your confirm password"/>
+        <input type="password" value={confirmPassword}  className="border border-gray-200 h-10 rounded-xl px-2 outline-none" id="confirm" placeholder="enter your confirm password" onChange={(e)=>setConfirmPassword(e.target.value)}/>
        </div>
       
-        <button className="bg-black text-white rounded-2xl py-3 active:scale-95 cursor-pointer">Change password</button>
+        <button className="bg-black text-white rounded-2xl py-3 active:scale-95 cursor-pointer" onClick={handleReset}>Change password</button>
       </div>
       </div>
   )

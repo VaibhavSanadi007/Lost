@@ -8,7 +8,7 @@ export const createComment = async (req: Request, res: Response) => {
     const postId = req.params.postid;
     const {commentText} = req.body;
 
-    const userObjectId = mongoose.Types.ObjectId.createFromHexString(req.user?.id);
+    const userObjectId = mongoose.Types.ObjectId.createFromHexString(req.user?._id?.toString() as string);
 
     const commentData = new commentModel({
       commentUserId: userObjectId,
@@ -69,7 +69,7 @@ export const editComments = async (req: Request, res: Response) => {
     const commentid = req.params.commentid;
     const {commentText} = req.body;
 
-    const data = await commentModel.findOneAndUpdate({_id:commentid,commentUserId:req.user?.id},{commentText},{new:true}).populate('commentUserId','username');
+    const data = await commentModel.findOneAndUpdate({_id:commentid,commentUserId:req.user?._id},{commentText},{new:true}).populate('commentUserId','username');
 
     if(!data){
       return res.json({
@@ -94,7 +94,7 @@ export const deleteComments = async (req: Request, res: Response) => {
   try {
     const commentid = req.params.commentid;
 
-    const data = await commentModel.findOneAndDelete({_id:commentid,commentUserId:req.user?.id});
+    const data = await commentModel.findOneAndDelete({_id:commentid,commentUserId:req.user?._id});
 
     if(!data){
       return res.json({

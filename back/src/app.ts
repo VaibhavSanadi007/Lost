@@ -15,6 +15,19 @@ import chatRouter from "./routes/chat.router.js";
 // import nodemailer from 'nodemailer';
 import compression from 'compression';
 import storyRouter from './routes/story.routers.js';
+
+import session from 'express-session';
+import requestIp from 'request-ip';
+
+import passport from "passport";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import { Strategy as GitHubStrategy } from "passport-github2";
+
+import { googleLogin } from "./controllers/google.controller.js";
+import { githubLogin } from "./controllers/github.controller.js";
+
+const port = process.env.PORT || 8000;
+
 // const limiter = rateLimit({
 //   windowMs: 15 * 60 * 1000,
 //   max: 100,
@@ -23,17 +36,15 @@ import storyRouter from './routes/story.routers.js';
 // legacyHeaders: false,
 // });
 
-import passport from "passport";
-import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import userModel from "./models/user.model.js";
-import jwt from "jsonwebtoken";
-
-const port = process.env.PORT || 8000;
-
 const app = express();
 
 app.use(express.json());
 app.use(cookieparser());
+app.use(session({
+  secret: `my-secret`,
+  resave: true,
+  saveUninitialized: false,
+}))
 app.use(helmet());
 app.use(
   cors({
@@ -42,6 +53,9 @@ app.use(
     credentials: true,
   })
 );
+
+app.use(requestIp.mw());
+
 // app.use(limiter);
 app.use(compression({
   level:6,
@@ -80,6 +94,16 @@ passport.use(
   )
 );
 
+passport.use(new GitHubStrategy({
+    clientID: process.env.GITHUB_CLIENT_ID as string,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+    callbackURL: "http://localhost:3000/auth/github/callback"
+  },
+  function(accessToken:any, refreshToken:any, profile:any, done:any) {
+      return done(null , profile);
+  }
+));
+
 // Route to initiate Google OAuth flow
 app.get(
   "/auth/google",
@@ -92,41 +116,20 @@ app.get(
 // Callback route that Google will redirect to after authentication
 app.get(
   "/auth/google/callback",
-  passport.authenticate("google", { session: false }),
-  async (req, res) => {
-    console.log("google");
-    const googleUser = req.user as any;
-
-    const { name, email, picture } = googleUser._json;
-
-    let user = await userModel.findOne({ email });
-
-    if (!user) {
-      user = await userModel.create({
-        username: name,
-        name,
-        email,
-        dp: picture,
-        password: "Google@123",
-      });
-    }
-
-    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET!, {
-      expiresIn: "1h",
-    });
-
-    res.cookie("token", token, {
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
-    });
-
-    return res.redirect(`http://localhost:5173/home?token=${token}`);
-  }
+  passport.authenticate("google",{session: false}),
+  googleLogin
 );
+
+app.get('/auth/github',
+  passport.authenticate('github', { scope: [ 'user:email' ] }));
+
+app.get('/auth/github/callback', 
+  passport.authenticate('github', { failureRedirect: '/login' , session: false }),
+  githubLogin);
 
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
-app.use("/post", postRouter);
+app.use("/post", postRouter); 
 app.use("/comment", commentRouter);
 app.use("/msg", chatRouter);
 app.use("/story", storyRouter);

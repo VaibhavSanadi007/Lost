@@ -64,7 +64,7 @@ export const createPost = async (req: Request, res: Response) => {
     console.log(uploadResponse)
 
     const data = await postModel.create({
-      postUserId: req.user?.id,
+      postUserId: req.user?._id,
       postId: uploadResponse.fileId,
       postUrl: uploadResponse.url,
       postDescription: postDescription ? postDescription : "",
@@ -114,7 +114,7 @@ export const editPost = async (req: Request, res: Response) => {
     const postId = req.params.id;
 
     const data = await postModel.findOneAndUpdate(
-      { _id: postId, postUserId: req.user?.id },
+      { _id: postId, postUserId: req.user?._id },
       { $set: { postDescription, postTags: ArrayOfPost } },
       { new: true }
     );
@@ -149,7 +149,7 @@ export const LikePost = async (req: Request, res: Response) => {
 
     const data = await postModel.findByIdAndUpdate(
       postId,
-      { $push: { like: req.user?.id } },
+      { $push: { like: req.user?._id } },
       { new: true }
     );
 
@@ -170,7 +170,7 @@ export const UnLikePost = async (req: Request, res: Response) => {
     const LikeObj = await postModel.findById(postId).select("like");
 
     const isLikeExist = LikeObj?.like.find(
-      (items: any) => items._id.toString() === req.user?.id
+      (items: any) => items._id.toString() === req.user?._id
     );
 
     if (!isLikeExist) {
@@ -179,7 +179,7 @@ export const UnLikePost = async (req: Request, res: Response) => {
 
     const data = await postModel.findByIdAndUpdate(
       postId,
-      { $pull: { like: req.user?.id } },
+      { $pull: { like: req.user?._id } },
       { new: true }
     );
 
@@ -266,18 +266,19 @@ export const getuserPosts = async (req: Request, res: Response) => {
 export const getFeed = async (req: Request, res: Response) => {
   try {
 
-    const userId = req.user?.id;
+    const userId = req.user?._id;
+    const page = Number(req.query.page);
+
 
      const followingData = await followModel
           .find({ followingId: userId })
           .populate("followerId", "_id username").select('followerId');
 
     const ids = followingData.map((item)=> item.followerId._id); 
-    ids.push(userId);
+    ids.push(userId!);
     const data = await postModel
       .find({postUserId: {$in:ids}})
       .sort({ createdAt: -1 })
-      .limit(20)
       .populate("postUserId", "username name dp");
 
     res.json({

@@ -26,6 +26,7 @@ export interface ObjType {
   tags: string[];
   followers: FollowType[];
   following: FollowType[];
+  privateMode: boolean;
 }
 
 const initialState: ObjType = {
@@ -40,6 +41,7 @@ const initialState: ObjType = {
   tags: [],
   followers: [],
   following: [],
+  privateMode: false,
 };
 
 const userSlice = createSlice({

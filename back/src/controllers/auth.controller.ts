@@ -3,6 +3,14 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 const saltRounds = 10;
 import userModel from "../models/user.model.js";
+import { clearUserSession, createAccessToken, createRefreshToken, createSession } from "../services/auth.service.js";
+import commentModel from "../models/comment.model.js";
+import followModel from "../models/follow.model.js";
+import storyModel from "../models/story.model.js";
+import chatModel from "../models/socket.model.js";
+import postModel from "../models/post.model.js";
+import imagekit from "../services/imagekit.services.js";
+
 
 export const authRegister = async (req: Request, res: Response) => {
   console.log(req.body);
@@ -20,35 +28,38 @@ export const authRegister = async (req: Request, res: Response) => {
 
   const hashPassword = await bcrypt.hash(password, saltRounds);
 
-  const user = await userModel.create({
+  const isUser = await userModel.create({
     username,
     email,
     password: hashPassword,
    });
 
-  const token = jwt.sign(
-    {
-      id: user._id,
-      username: user.username,
-      email: user.email,
-      role: user.role,
-    },
-    process.env.JWT_SECRET!,
-    {
-      expiresIn: "1d",
-    }
-  );
+    const session = await createSession(isUser._id,{
+    ipAddress: req.clientIp,
+    userAgent: req.headers[`user-agent`],
+  })
 
-  res.cookie("token", token, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",  
-    maxAge: 24 * 60 * 60 * 1000,
-  });
+  const accessToken = await createAccessToken({_id: isUser._id,username: isUser.username ,email: isUser.email , sessionId : session._id })
+  const refreshToken = await createRefreshToken(session._id );
+
+    res.cookie('access_token', accessToken ,{
+     httpOnly: true,
+     secure: true,
+     sameSite: "none",  
+     maxAge: 15 * 60 * 1000,
+   }
+  )
+    res.cookie('refresh_token', refreshToken ,{
+     httpOnly: true,
+     secure: true,
+     sameSite: "none",  
+     maxAge: 7 * 24 * 60 * 60 * 1000,
+   }
+  )
 
   res.status(201).json({
     message: "User Created Successfully",
-    data: user,
+    data: isUser,
   });
 };
 
@@ -69,25 +80,28 @@ export const authLogin = async (req: Request, res: Response) => {
     return res.status(401).json({ message: "Invalid credentials" });
   }
 
-  const token = jwt.sign(
-    {
-      id: isUser._id,
-      username: isUser.username,
-      email: isUser.email,
-      role: isUser.role,
-    },
-    process.env.JWT_SECRET!,
-    {
-      expiresIn: "1d",
-    }
-  );
+  const session = await createSession(isUser._id,{
+    ipAddress: req.clientIp,
+    userAgent: req.headers[`user-agent`],
+  })
 
-  res.cookie("token", token, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",  
-    maxAge: 24 * 60 * 60 * 1000,
-  });
+  const accessToken = await createAccessToken({_id: isUser._id,username: isUser.username ,email: isUser.email , sessionId : session._id })
+  const refreshToken = await createRefreshToken(session._id );
+
+    res.cookie('access_token', accessToken ,{
+     httpOnly: true,
+     secure: true,
+     sameSite: "none",  
+     maxAge: 15 * 60 * 1000,
+   }
+  )
+    res.cookie('refresh_token', refreshToken ,{
+     httpOnly: true,
+     secure: true,
+     sameSite: "none",  
+     maxAge: 7 * 24 * 60 * 60 * 1000,
+   }
+  )
 
   return res.status(200).json({
     message: "Login Successful",
@@ -96,7 +110,16 @@ export const authLogin = async (req: Request, res: Response) => {
 };
 
 export const authLogOut = async (req: Request, res: Response) => {
-  res.clearCookie("token", {
+
+  await clearUserSession(req.user?.sessionId!);
+
+  res.clearCookie("access_token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",  
+    expires: new Date(0),
+  });
+  res.clearCookie("refresh_token", {
     httpOnly: true,
     secure: true,
     sameSite: "none",  
@@ -124,7 +147,7 @@ export const authReset = async (req: Request, res: Response) => {
   }
 
   const userPass = await userModel.findOne({
-    $or: [{ _id: req.user?.id }, { username: req.user?.username }],
+    $or: [{ _id: req.user?._id }, { username: req.user?.username }],
   }).select("password");
 
   const isUserPassValid = await bcrypt.compare(password, userPass?.password as string);
@@ -136,7 +159,7 @@ export const authReset = async (req: Request, res: Response) => {
   const hashPassword = await bcrypt.hash(confirmPassword, saltRounds);
 
   const UpdatePassword = await userModel.findByIdAndUpdate(
-    req.user?.id,
+    req.user?._id,
     { password: hashPassword },
     { new: true }
   );
@@ -167,6 +190,56 @@ export const authForgot = async (req: Request, res: Response) => {
   res.status(200).json({
     message: "password updated successfully",
     data: UpdatePassword
+  });
+};
+
+export const authDeleteAccount = async (req: Request, res: Response) => {
+  const userId = req.user?._id;
+
+  const postOfUser = await postModel.find({postUserId:userId}).select(`postId`);
+
+  if(postOfUser.length>0){
+    const postArr = postOfUser.map((item)=>{
+      return item.postId;
+    });
+  
+   const response = await imagekit.bulkDeleteFiles(postArr);
+    console.log(response);
+  }
+
+  await userModel.findByIdAndDelete(userId);
+  await commentModel.deleteMany({
+    commentUserId: userId
+  });
+  await followModel.deleteMany({$or:[
+    {followerId:userId},
+    {followingId:userId}
+  ]});
+  await storyModel.deleteMany({
+    ownerId: userId
+  });
+  await chatModel.deleteMany({
+    $or:[
+      {senderId:userId},
+      {receiverId:userId}
+    ]
+  });
+  await postModel.deleteMany({
+    postUserId: userId
+  });
+
+  res.status(200).json({
+    message: "account deleted successfully",
+  });
+};
+
+export const authPrivacyAccount = async (req: Request, res: Response) => {
+  const {privateMode} = req.body;
+  const userId = req.user?._id;
+  await userModel.findByIdAndUpdate(userId,{privateMode});
+
+  res.status(200).json({
+    message: "account privacy updated successfully",
   });
 };
 

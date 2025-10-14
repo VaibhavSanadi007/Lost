@@ -1,10 +1,9 @@
 import type { FC } from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store/reduxStore";
-import editIcon from "../assets/user-edit.png";
 import defaulticon from '../assets/default_profile_pic.jpg';
 import type { ObjType } from "../store/postSlice";
-
+import { FaUserEdit } from "react-icons/fa";
 type property = {
   setopen: React.Dispatch<React.SetStateAction<boolean>>;
   setopenFollowers: React.Dispatch<React.SetStateAction<boolean>>;
@@ -24,7 +23,7 @@ const ProfileHeader: FC<property> = ({ setopen , setopenFollowers , setopenFollo
 
   return (
     // Card container
-    <section className="bg-gray-100 border-gray-200 rounded-xl overflow-hidden xl:h-fit xl:w-[60%]">
+    <section className=" overflow-hidden xl:h-fit xl:w-[60%]">
    
       <div className="px-6 pt-4 pb-6   ">
         <div className="flex items-center justify-center xl:gap-5 ">
@@ -40,7 +39,7 @@ const ProfileHeader: FC<property> = ({ setopen , setopenFollowers , setopenFollo
             <div className="flex items-center  gap-2 ">
               <h1 className="text-lg sm:text-xl font-semibold">{items.name}</h1>
               {/* Verified tick as small pill */}
-              <span className="inline-flex h-5 w-5 rounded-full bg-indigo-600 text-white items-center justify-center text-[10px]">
+              <span className="inline-flex h-5 w-5 rounded-full bg-black text-white items-center justify-center text-[10px]">
                 ✓
               </span>
             </div>
@@ -53,7 +52,7 @@ const ProfileHeader: FC<property> = ({ setopen , setopenFollowers , setopenFollo
             className="inline-flex  items-center gap-2 px-3 py-1.5 rounded-md active:scale-95 text-sm cursor-pointer"
             onClick={() => setopen(true)}
           >
-            <img src={editIcon} className="h-10" />
+           <FaUserEdit size={40} />
          
           </button>
 

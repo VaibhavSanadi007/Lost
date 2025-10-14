@@ -7,6 +7,8 @@ import defaultIcon from "../assets/default_profile_pic.jpg";
 import { CreateSocketServer } from "../services/Socket";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../store/reduxStore";
+import { VscSend } from "react-icons/vsc";
+import { RiImageAiLine } from "react-icons/ri";
 import {
   addChat,
   deleteChat,
@@ -213,7 +215,7 @@ const MessageBox = () => {
   };
 
   return (
-    <div className=" xl:w-[60%]   rounded-2xl overflow-hidden bg-gray-50 ">
+    <div className=" xl:w-[60%]   rounded-2xl overflow-hidden border border-gray-200 ">
       {/* menu modal */}
       {menu.visible && (
         <div
@@ -267,7 +269,7 @@ const MessageBox = () => {
         </div>
       )}
 
-      <header className="sticky top-0 z-10 xl:h-20 sm:h-14 bg-gray-200 backdrop-blur border-b border-gray-200 flex items-center px-3 sm:px-6">
+      <header className="sticky top-0 z-10 xl:h-20 sm:h-14  border-b  border-gray-200 flex items-center px-3 sm:px-6">
         <div className="flex items-center gap-3">
           <img
             src={value.dp ? value.dp : defaultIcon}
@@ -299,49 +301,50 @@ const MessageBox = () => {
                   items.senderId === myid ? "justify-end" : "justify-start"
                 }  `}
               >
-                {items.senderId !== myid && <img src={value.dp ? value.dp : defaultIcon} className="h-8 w-8 rounded-xl xl:h-8 xl:w-8 object-cover xl:rounded-2xl"/>}
+                {items.senderId !== myid && <img src={value.dp ? value.dp : defaultIcon} className="h-6 w-6  xl:h-6 xl:w-6 object-cover rounded"/>}
                 <h1
                   id={items._id}
                   onContextMenu={(e) =>
                     items.senderId === myid ? handleRightClick(e,myid) : ""
                   }
                   className={`${
-                    items.senderId === myid ? "bg-red-300" : "bg-blue-300"
-                  } text-white xl:px-2 xl:py-1 xl:w-fit max-w-50 xl:max-w-70   rounded  break-words   `}
+                    items.senderId === myid ? "border border-gray-200 text-black" : "bg-black text-white"
+                  }  xl:px-1  xl:py-0.5 xl:w-fit max-w-50  xl:max-w-70   rounded  break-words   `}
                 >
                   {items.message}
                 </h1>
-                 {items.senderId === myid && <img src={UserData.dp? UserData.dp : defaultIcon} className="h-8 w-8 rounded-xl xl:h-8 xl:w-8 object-cover xl:rounded-2xl"/>}
+                 {items.senderId === myid && <img src={UserData.dp? UserData.dp : defaultIcon} className="h-6 w-6  xl:h-6 xl:w-6 object-cover rounded"/>}
               </div>
             ))}
         </div>
       </main>
 
-      <footer className="sticky  bottom-0  bg-gradient-to-t from-gray-50 to-gray-50/60 backdrop-blur border-t border-gray-200">
-        <div className="mx-auto xl:h-20   max-w-3xl px-3 sm:px-6 py-3 ">
-          <div className="flex items-center gap-2 sm:gap-3  border  border-gray-200 rounded-full pl-3 pr-2 sm:pr-2.5 py-1.5 shadow-sm bg-gray-200">
+      <footer className="sticky  bottom-6  border-t border-gray-200">
+        <div className="mx-auto xl:h-20   max-w-3xl px-3  py-3 ">
+          <div className="flex items-center gap-1 sm:gap-3  border  border-gray-200 rounded-full pl-3 pr-2 sm:pr-2.5 py-1.5 shadow-sm ">
             <textarea
               onChange={(e) => setmessage(e.target.value)}
               value={message}
               placeholder="Type a message..."
-              className="flex-1 items-center xl:py-2 xl:px-2 xl:h-10 scrollbar-hide  min-w-0 resize-none bg-transparent outline-none text-sm "
+              className="flex-1 items-center xl:py-2 xl:px-2 xl:h-10 scrollbar-hide  min-w-0 resize-none  outline-none text-sm "
             />
 
-            <button
-              type="button"
+            <label
+            htmlFor="sendMsg"
               className="h-9 w-9 rounded-full inline-flex items-center justify-center hover:bg-gray-50"
               aria-label="Attach"
             >
-              <span className="h-4 w-4 rounded bg-gray-300" />
-            </button>
+              <RiImageAiLine size={25} className="active:scale-95" />
+              <input type="file" name="sendMsg" id="sendMsg" className="hidden" />
+            </label>
 
             <button
-              className="h-9 px-4 rounded-full text-white text-sm font-medium bg-indigo-600 hover:bg-indigo-700"
+              className="px-2"
               onClick={()=>{
                 handleMsg();
               }}
             >
-              Send
+              <VscSend className="text-black active:scale-95"  size={25} />
             </button>
           </div>
         </div>

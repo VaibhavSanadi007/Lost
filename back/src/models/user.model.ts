@@ -2,6 +2,7 @@ import mongoose, { Schema, Document, Types } from "mongoose";
 
 export interface IUser extends Document {
   _id: Types.ObjectId;
+  sessionId: Types.ObjectId;
   username: string;
   email: string;
   name?: string;
@@ -10,6 +11,7 @@ export interface IUser extends Document {
   description?: string;
   tags?: string[];
   role: string;
+  privateMode?: boolean;
 }
 
 const userSchema: Schema<IUser> = new Schema(
@@ -52,6 +54,10 @@ const userSchema: Schema<IUser> = new Schema(
       enum: ["user", "admin"],
       default: "user",
     },
+    privateMode: {
+      type: Boolean,
+      default: false,
+    }
   },
   { timestamps: true }
 );

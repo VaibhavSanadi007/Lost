@@ -19,7 +19,7 @@ export const getUserData = async (req: Request, res: Response) => {
 
     const data = await userModel
       .findById(userId)
-      .select("username email name description tags role dp");
+      .select("username email name description tags role dp privateMode");
 
     if (!data) {
       return res.status(400).json({
@@ -108,7 +108,7 @@ export const followUser = async (req: Request, res: Response) => {
 
     const isUserExist = await followModel.findOne({
       followerId: userId,
-      followingId: req.user?.id,
+      followingId: req.user?._id,
     });
 
     if (isUserExist) {
@@ -116,7 +116,7 @@ export const followUser = async (req: Request, res: Response) => {
     }
 
     const followData = new followModel({
-      followingId: req.user?.id,
+      followingId: req.user?._id,
       followerId: userId,
     });
     await followData.save();
@@ -138,7 +138,7 @@ export const UnfollowUser = async (req: Request, res: Response) => {
 
     const isUserExist = await followModel.findOne({
       followerId: userId,
-      followingId: req.user?.id,
+      followingId: req.user?._id,
     });
 
     if (!isUserExist) {
@@ -147,7 +147,7 @@ export const UnfollowUser = async (req: Request, res: Response) => {
 
     const followData = await followModel.findOneAndDelete({
       followerId: userId,
-      followingId: req.user?.id,
+      followingId: req.user?._id,
     });
 
     const data = await followData?.populate(
@@ -201,7 +201,7 @@ export const getfollowing = async (req: Request, res: Response) => {
 
 export const getUser = async (req: Request, res: Response) => {
   try {
-    const userId = req.user?.id;
+    const userId = req.user?._id;
 
     const data = await userModel
       .findById(userId)
@@ -223,7 +223,7 @@ export const getUser = async (req: Request, res: Response) => {
 
 export const getRecommendFriends = async (req: Request, res: Response) => {
   try {
-    const userId = req.user?.id;
+    const userId = req.user?._id;
 
     const followingData = await followModel
       .find({ followingId: userId })
@@ -272,3 +272,4 @@ export const searchUser = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error", error });
   }
 }
+

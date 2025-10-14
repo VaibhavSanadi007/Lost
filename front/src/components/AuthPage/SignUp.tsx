@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import { url } from "../../App";
 const SignUp = () => {
   const navigate = useNavigate();
-  const disptach = useDispatch();
+  const dispatch = useDispatch();
   const [openEye , setOpenEye] = useState(false);
 
   const [username, setusername] = useState<string>("");
@@ -22,38 +22,49 @@ const SignUp = () => {
 
    const handleRegister = async () => {
     try {
-      const { data } = await axios.post(
-       `${url}/auth/register`,
-        {
-          username,
-          email,
-          password,
-        },
-        {
-          withCredentials: true,
-        }
-      );
-      navigate(`/home`);
+      const promise = axios.post(
+      `${url}/auth/register`,
+      { username, email, password },
+      { withCredentials: true }
+    );
 
-      disptach(addUser(data.data));
-     toast.success("Welcome aboard! Your account is ready 🚀")
+    const { data } = await toast.promise(
+      promise,
+      {
+        pending: "Creating your account...",
+        success: "Welcome aboard! Your account is ready 🚀",
+        error:"Register failed refresh and re Register once Again 😔",
+      }
+    );
+
+    dispatch(addUser(data.data));
+    navigate("/home");
     }  catch (err:any) {
       console.log("Error :",err);
       toast.error(err.response.data.message)
     }
   };
 
-  //  const handleGoogleLogin = async () => {
-  //   try {
-  //     console.log("google")
-  //     window.location.href = `${url}/auth/google`;
+   const handleGoogleLogin = async () => {
+    try {
+      window.location.href = `${url}/auth/google`;
       
   
-  //   }  catch (err:any) {
-  //     console.log("Error :",err);
-  //     toast.error(err.response.data.message)
-  //   }
-  // };
+    }  catch (err:any) {
+      console.log("Error :",err);
+      toast.error(err.response.data.message)
+    }
+  };
+
+   const handleGithubLogin = async () => {
+    try {
+      window.location.href = `${url}/auth/github`;
+      
+    }  catch (err:any) {
+      console.log("Error :",err);
+      toast.error(err.response.data.message)
+    }
+  };
 
 
   return (
@@ -139,11 +150,11 @@ const SignUp = () => {
         {/* google ka login */}
    <div className="flex flex-col gap-4 xl:gap-5">
 
-          <button className="cursor-pointer active:scale-95 border h-10  xl:h-10 lg:w-60  rounded-2xl flex items-center justify-center lg:gap-2 xl:gap-3">
+          <button className="cursor-pointer active:scale-95 border h-10  xl:h-10 lg:w-60  rounded-2xl flex items-center justify-center lg:gap-2 xl:gap-3" onClick={()=>handleGoogleLogin()} >
             <FcGoogle size={25} />
             Continue with Google
           </button>
-          <button className="cursor-pointer active:scale-95 border h-10 xl:h-10 xl:w-60 rounded-2xl flex items-center justify-center xl:gap-3">
+          <button className="cursor-pointer active:scale-95 border h-10 xl:h-10 xl:w-60 rounded-2xl flex items-center justify-center xl:gap-3" onClick={()=>handleGithubLogin()}>
             <FaGithub size={25} />
             Continue with Github
           </button>

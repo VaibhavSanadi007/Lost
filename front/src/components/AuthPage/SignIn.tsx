@@ -15,7 +15,7 @@ import { url } from "../../App";
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const disptach = useDispatch();
+  const dispatch = useDispatch();
 
   const [openEye , setOpenEye] = useState(false);
 
@@ -24,25 +24,49 @@ const SignIn = () => {
 
     const handleLogin = async () => {
     try {
-      const { data } = await axios.post(
-        `${url}/auth/login`,
-        {
-          email,
-          password,
-        },
-        {
-          withCredentials: true,
-        }
-      );
-      navigate(`/home`);
-      disptach(addUser(data.data));
-      toast.success("Welcome Back!!")
+       const promise = axios.post(
+      `${url}/auth/login`,
+      { email, password },
+      { withCredentials: true }
+    );
+
+    const { data } = await toast.promise(
+      promise,
+      {
+        pending: "Logging in...",
+        success: "Welcome back!! 👋",
+        error: "Login failed refresh and re login once Again 😔",
+      }
+    );
+
+    dispatch(addUser(data.data));
+    navigate("/home");
  
     } catch (err:any) {
       console.log("Error :",err);
       toast.error(err.response.data.message)
     }
   };
+
+   const handleGoogleLogin = async () => {
+    try {
+      window.location.href = `${url}/auth/google`;
+      
+    }  catch (err:any) {
+      console.log("Error :",err);
+      toast.error(err.response.data.message)
+    }
+  };
+
+  const handleGithubLogin = async () => {
+      try {
+        window.location.href = `${url}/auth/github`;
+        
+      }  catch (err:any) {
+        console.log("Error :",err);
+        toast.error(err.response.data.message)
+      }
+    };
 
   return (
     <div className="h-full w-full bg-white px-5 md:px-20  xl:px-25 ">
@@ -121,11 +145,11 @@ const SignIn = () => {
 
         <div className="flex flex-col gap-4 xl:gap-5">
 
-          <button className="cursor-pointer active:scale-95 border h-10  xl:h-10 lg:w-60  rounded-2xl flex items-center justify-center lg:gap-2 xl:gap-3">
+          <button className="cursor-pointer active:scale-95 border h-10  xl:h-10 lg:w-60  rounded-2xl flex items-center justify-center lg:gap-2 xl:gap-3" onClick={()=>handleGoogleLogin()}>
             <FcGoogle size={25} />
             Continue with Google
           </button>
-          <button className="cursor-pointer active:scale-95 border h-10 xl:h-10 xl:w-60 rounded-2xl flex items-center justify-center xl:gap-3">
+          <button className="cursor-pointer active:scale-95 border h-10 xl:h-10 xl:w-60 rounded-2xl flex items-center justify-center xl:gap-3" onClick={()=>handleGithubLogin()}>
             <FaGithub size={25} />
             Continue with Github
           </button>

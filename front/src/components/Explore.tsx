@@ -18,6 +18,8 @@ const Explore = () => {
   const [recommend, setRecommend] = useState<obj[]>([]);
   const [searchResult, setSearchResult] = useState<obj[]>([]);
   const [searchInput,setSearchInput] = useState<string  | null>(null);
+  const arr = ['John', 'Jane', 'Alex', 'Emma', 'wick', 'jackSparrow', 'reyna', 'Mike', 'Lucy'];
+
   const handleGetRecommend = async () => {
     const { data } = await axios.get(`${url}/user/recommend`, {
       withCredentials: true,
@@ -89,7 +91,7 @@ const Explore = () => {
             Recommended friends
           </h1>
           <div className=" xl:h-fit xl:w-full border border-gray-200 rounded-2xl flex flex-wrap gap-2 px-1 xl:gap-2 xl:px-1 xl:py-1.5 py-1">
-            {recommend.map((item, index) => (
+            {recommend.length ? recommend.map((item, index) => (
               <div
                 key={index}
                 className="xl:h-35 xl:w-35 flex flex-col items-center rounded-2xl border border-gray-200 xl:p-2"
@@ -104,7 +106,15 @@ const Explore = () => {
                 <h1 className="">{item.name}</h1>
                 <h1 className="text-sm text-gray-300">@{item.username}</h1>
               </div>
-            ))}
+            )) : 
+            arr.map((item,index)=>(
+              <div key={index} className="xl:h-35 xl:w-35 flex flex-col items-center rounded-2xl border border-gray-200 xl:p-2">
+                <div className="h-15 w-15 xl:h-20 xl:w-20 rounded-2xl bg-gray-400 animate-pulse" />
+                <h1>{item}</h1>
+              </div> 
+            ))
+            
+            }
           </div>
         </div>
       </div>

@@ -31,7 +31,7 @@ postTags:{
   type:[String],
 },
 like:{
-  type:[{type:Schema.Types.ObjectId , ref:'User'}]
+  type:[{type: Schema.Types.ObjectId , ref:'User'}]
 },
 postType:{
   type: String,

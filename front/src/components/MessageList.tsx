@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import Sidebar from "./Sidebar"
 import axios from "axios";
 import { useEffect, useState } from "react";
-
+import defaulticon from '../assets/default_profile_pic.jpg';
 import { url } from "../App";
 
 export type miniObj = {
@@ -22,12 +22,12 @@ const navigate = useNavigate();
 const {userId} = useParams();
 const [value,setvalue] = useState<objType[]>([]);
 
+
 const handleMsgList = async ()=>{
-  
   await axios.get(`${url}/user/${userId}/following`,{withCredentials:true}).then(({data})=>{
     setvalue(data.data);
+    console.log(data.data)
   })
-
 }
 
 useEffect(()=>{
@@ -46,15 +46,18 @@ useEffect(()=>{
         <div key={index} className="xl:h-fit xl:py-3 py-2 w-full border border-gray-200 rounded-2xl xl:mb-2 mb-2 flex items-center xl:gap-4 gap-3 xl:px-3 px-3" onClick={()=>{
           navigate('/messagebox/'+item.followerId._id);
         }}>
-          <img src={item.followerId.dp}  className="w-15 h-15 rounded-2xl object-cover" />
+          <img src={item.followerId.dp ? item.followerId.dp :defaulticon}  className="w-15 h-15 rounded-2xl object-cover" />
           <div>
             <h1 className=" text-xl">{item.followerId.name}</h1>
           <h1 className="text-sm text-gray-400 xl:mb-3">@{item.followerId.username}</h1>
           <h1 className="text-sm ">{item.followerId.description}</h1>
           </div>
         </div>
-        ) : <h1>No Messages</h1>
-
+        )
+         : 
+         <div className="xl:h-20 xl:py-3 py-2 w-full border border-gray-200 rounded-2xl xl:mb-2 mb-2 flex items-center justify-center xl:gap-4 gap-3 xl:px-3 px-3">
+           <h1 className="text-center">No Messages</h1>
+          </div>
       }
         </div>
       </div>

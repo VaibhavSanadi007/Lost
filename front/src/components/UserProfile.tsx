@@ -5,10 +5,16 @@ import { useEffect, useState, type FC } from "react";
 import {  type ObjType } from "../store/userSlice";
 import {  type ObjType as postType } from "../store/postSlice";
 import defaultImg from "../assets/default_profile_pic.jpg";
+import { useSelector } from "react-redux";
+import type { RootState } from "../store/reduxStore";
 type property = {
   value : postType[];
+  setopenFollowers: React.Dispatch<React.SetStateAction<boolean>>;
+  setopenFollowing: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const UserProfile:FC<property> = ({value}) => {
+const UserProfile:FC<property> = ({value,setopenFollowers,setopenFollowing}) => {
+  const userData = useSelector((item:RootState)=>item.user);
+  const [isFollowing,setIsFollowing] = useState<string>('Follow');
   const [Uservalue, setUservalue] = useState<ObjType>({
     _id: "",
     username: "",
@@ -21,6 +27,7 @@ const UserProfile:FC<property> = ({value}) => {
     tags: [],
     followers: [],
     following: [],
+    privateMode: false,
   });
 
   const { userId } = useParams();
@@ -31,8 +38,9 @@ const UserProfile:FC<property> = ({value}) => {
       withCredentials: true,
     });
     setUservalue(data.data);
-      handleGetFollower();
-    handleGetFollowing();
+    await handleGetFollower();
+    await handleGetFollowing();
+
   };
   const handleFollowUser = async () => {
     await axios.post(`${url}/user/${userId}/follow`,{},{withCredentials:true});
@@ -48,6 +56,7 @@ const UserProfile:FC<property> = ({value}) => {
       { withCredentials: true }
     );
       setUservalue(prev=>({...prev,following:FollowData.data.data}));
+     
   };
 
   const handleGetFollower = async () => {
@@ -59,19 +68,33 @@ const UserProfile:FC<property> = ({value}) => {
      
   };
 
-  
-  
+const handleIsFollowing = () => {
+  const isFollowingExist = Uservalue.followers.find((item) => {
+    return (
+      item.followingId &&
+      item.followingId._id === userData._id
+    );
+  });
+
+  setIsFollowing(isFollowingExist ? 'Following' : 'Follow');
+};
+
+useEffect(() => {
+  if (Uservalue && Uservalue.followers && userData) {
+    handleIsFollowing();
+  }
+}, [Uservalue.followers, userData]);
+
+
   useEffect(() => {
     
     handleGetUsersData();
-  
   }, []);
-
   return (
     <div className="text-white w-full  flex items-center justify-center">
-      <section className="bg-gray-100 border-gray-200 rounded-xl overflow-hidden xl:h-fit xl:w-[60%]">
-        <div className="px-6 pt-4 pb-6   ">
-          <div className="flex items-center justify-center xl:gap-5 ">
+      <section className=" border-gray-200 rounded-xl overflow-hidden xl:h-fit xl:w-[60%]">
+        <div className="px-6 pt-4 pb-6  ">
+          <div className="flex  justify-center xl:gap-10   ">
             <img
               src={Uservalue.dp ? Uservalue.dp : defaultImg}
               className=" xl:h-40 xl:w-40 object-cover rounded-2xl sm:h-24 sm:w-24  "
@@ -83,7 +106,7 @@ const UserProfile:FC<property> = ({value}) => {
                     {Uservalue.username}
                   </h1>
                   {/* Verified tick as small pill */}
-                  <span className="inline-flex h-5 w-5 rounded-full bg-indigo-600 text-white items-center justify-center text-[10px]">
+                  <span className="inline-flex h-5 w-5 rounded-full bg-black text-white items-center justify-center text-[10px]">
                     ✓
                   </span>
                 </div>
@@ -111,13 +134,13 @@ const UserProfile:FC<property> = ({value}) => {
               </span>{" "}
               <span className="text-gray-400"> Posts </span>
             </p>
-            <p className="flex flex-col hover:border-b hover:border-gray-300 cursor-pointer xl:p-1">
+            <p onClick={()=>setopenFollowers(true)} className="flex flex-col hover:border-b hover:border-gray-300 cursor-pointer xl:p-1">
               <span className="text-2xl text-gray-700 font-bold text-center">
               {Uservalue.followers?Uservalue.followers.length:0}
               </span>{" "}
               <span className="text-gray-400"> Followers </span>
             </p>
-            <p className="flex flex-col hover:border-b hover:border-gray-300 cursor-pointer xl:p-1">
+            <p onClick={()=>setopenFollowing(true)} className="flex flex-col hover:border-b hover:border-gray-300 cursor-pointer xl:p-1">
               <span className="text-2xl text-gray-700 font-bold text-center">
                {Uservalue.following?Uservalue.following.length:0}
               </span>{" "}
@@ -125,11 +148,10 @@ const UserProfile:FC<property> = ({value}) => {
             </p>
           </div>
 
-          <div className="mt-4 my-2 xl:mx-35  border-t border-gray-200 " />
-
-          <div className="flex items-center justify-center xl:gap-10 ">
+          
+          <div className="flex items-center justify-center xl:gap-10 pt-5">
             <button className="rounded-xl xl:w-25 xl:py-1.5 bg-black cursor-pointer active:scale-95 " onClick={()=>handleFollowUser()}>
-              Follow
+             {isFollowing}
             </button>
             <button className="rounded-xl xl:w-25 xl:py-1.5 bg-red-400 cursor-pointer active:scale-95"       
             onClick={()=>{

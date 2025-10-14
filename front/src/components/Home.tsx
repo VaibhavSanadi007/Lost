@@ -9,7 +9,6 @@ import { useEffect, useState } from "react";
 import { addPost } from "../store/postSlice";
 import CommentsSection from "./AuthPage/CommentsSection";
 import LikesSection from "./AuthPage/LikesSection";
-
 import { url } from "../App";
 import StoryModal from "./StoryModal";
 
@@ -32,10 +31,7 @@ const Home = () => {
   
   useEffect(() => {
     getFeed();
-    // const params = new URLSearchParams(window.location.search);
-    // const token = params.get("token");
     
-    // console.log(token);
   }, []);
   
   
@@ -45,7 +41,7 @@ const Home = () => {
       <div className="h-fit md:w-[50%] flex flex-col items-center md:ml-50 lg:ml-50 xl:ml-100 ">
         <StoryRow setStoryModalFlag={setStoryModalFlag}  />
         <div className="flex flex-col gap-4 xl:gap-5">
-          {userFeed.map((item, index) => {
+          {userFeed.length ? userFeed.map((item, index) => {
             return (
               <PostCard
                 key={index}
@@ -54,7 +50,7 @@ const Home = () => {
                 setPostId={setPostId}
               />
             );
-          })}
+          }) : <h1 className="mt-5 text-center py-10 border border-gray-200 rounded-2xl  xl:w-140">No Feed please follow some users</h1> }
         </div>
       </div>
 
