@@ -60,7 +60,7 @@ app.use(
 
 app.use(requestIp.mw());
 
-// app.use(limiter);
+app.use(limiter);
 app.use(compression({
   level:6,
   threshold:10*100,
@@ -88,7 +88,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-      callbackURL: `${process.env.callbackURL}/auth/github/callback`,
+      callbackURL: `${process.env.callbackURL}/auth/google/callback`,
     },
     (accessToken, refreshToken, profile, done) => {
       // Here, you would typically find or create a user in your database
@@ -128,7 +128,7 @@ app.get('/auth/github',
   passport.authenticate('github', { scope: [ 'user:email' ] }));
 
 app.get('/auth/github/callback', 
-  passport.authenticate('github', { failureRedirect: '/login' , session: false }),
+  passport.authenticate('github', { failureRedirect: '/' , session: false }),
   githubLogin);
 
 app.use("/auth", authRouter);
