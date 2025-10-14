@@ -59,5 +59,5 @@ export const googleLogin = async (req: Request, res: Response) => {
       sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-  return res.redirect(`${process.env.frontURL}/home`);
+  return res.send('sucessfull login');
 };
