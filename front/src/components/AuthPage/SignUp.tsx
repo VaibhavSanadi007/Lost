@@ -48,7 +48,6 @@ const SignUp = () => {
    const handleGoogleLogin = async () => {
     try {
       window.location.href = `${url}/auth/google`;
-    navigate("/home");
       
     }  catch (err:any) {
       console.log("Error :",err);
@@ -59,7 +58,6 @@ const SignUp = () => {
    const handleGithubLogin = async () => {
     try {
       window.location.href = `${url}/auth/github`;
-    navigate("/home");
       
     }  catch (err:any) {
       console.log("Error :",err);

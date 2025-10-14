@@ -60,5 +60,5 @@ export const githubLogin = async (req: Request, res: Response) => {
       sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-  return res.send('sucessfull login');
+  return res.redirect(`${process.env.frontURL}/home`);
 };
