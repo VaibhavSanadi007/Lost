@@ -92,7 +92,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-      callbackURL: `${process.env.frontURL}/auth/google/callback`,
+      callbackURL: `https://lost-gij7.onrender.com/auth/google/callback`,
     },
     (accessToken, refreshToken, profile, done) => {
       // Here, you would typically find or create a user in your database
@@ -107,7 +107,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
-      callbackURL: `${process.env.frontURL}/auth/github/callback`,
+      callbackURL: `https://lost-gij7.onrender.com/auth/github/callback`,
     },
     function (accessToken: any, refreshToken: any, profile: any, done: any) {
       return done(null, profile);
