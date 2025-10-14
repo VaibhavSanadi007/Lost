@@ -40,7 +40,6 @@ const SignIn = () => {
     );
 
     dispatch(addUser(data.data));
-    navigate("/home");
  
     } catch (err:any) {
       console.log("Error :",err);
@@ -51,7 +50,6 @@ const SignIn = () => {
    const handleGoogleLogin = async () => {
     try {
       window.location.href = `${url}/auth/google`;
-      navigate("/home");
     }  catch (err:any) {
       console.log("Error :",err);
       toast.error(err.response.data.message)
