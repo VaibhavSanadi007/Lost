@@ -13,11 +13,11 @@ import commentRouter from "./routes/comment.routers.js";
 import { socketServer } from "./services/socket.services.js";
 import chatRouter from "./routes/chat.router.js";
 // import nodemailer from 'nodemailer';
-import compression from 'compression';
-import storyRouter from './routes/story.routers.js';
+import compression from "compression";
+import storyRouter from "./routes/story.routers.js";
 
-import session from 'express-session';
-import requestIp from 'request-ip';
+import session from "express-session";
+import requestIp from "request-ip";
 
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
@@ -27,28 +27,34 @@ import { googleLogin } from "./controllers/google.controller.js";
 import { githubLogin } from "./controllers/github.controller.js";
 
 const port = process.env.PORT || 8000;
-
-// const limiter = rateLimit({
-//   windowMs: 15 * 60 * 1000,
-//   max: 100,
-//   message: "too many attempts plz try again later",
-//   standardHeaders: true,
-// legacyHeaders: false,
-// });
+import MongoStore from "connect-mongo";
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: "too many attempts plz try again later",
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 const app = express();
 
 app.use(express.json());
 app.use(cookieparser());
-app.use(session({
-  secret: `my-secret`,
-  resave: true,
-  saveUninitialized: false,
-}))
+app.use(
+  session({
+    secret: `my-secret`,
+    resave: true,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI,
+      collectionName: "sessions",
+    }),
+  })
+);
 app.use(helmet());
 app.use(
   cors({
-    origin: process.env.frontURL ,
+    origin: process.env.frontURL,
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true,
   })
@@ -57,16 +63,18 @@ app.use(
 app.use(requestIp.mw());
 
 // app.use(limiter);
-app.use(compression({
-  level:6,
-  threshold:10*100,
-  filter:(req,res)=>{
-    if(req.headers[`x-no-compression`]){
-      return false;
-    }
-    return compression.filter(req,res);
-  },
-}))
+app.use(
+  compression({
+    level: 6,
+    threshold: 10 * 100,
+    filter: (req, res) => {
+      if (req.headers[`x-no-compression`]) {
+        return false;
+      }
+      return compression.filter(req, res);
+    },
+  })
+);
 // const transporter = nodemailer.createTransport({
 //   host: `smtp.gmail.com`,
 //   port: 587,
@@ -84,7 +92,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-      callbackURL: "http://localhost:3000/auth/google/callback",
+      callbackURL: `${process.env.frontURL}/auth/google/callback`,
     },
     (accessToken, refreshToken, profile, done) => {
       // Here, you would typically find or create a user in your database
@@ -94,15 +102,18 @@ passport.use(
   )
 );
 
-passport.use(new GitHubStrategy({
-    clientID: process.env.GITHUB_CLIENT_ID as string,
-    clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
-    callbackURL: "http://localhost:3000/auth/github/callback"
-  },
-  function(accessToken:any, refreshToken:any, profile:any, done:any) {
-      return done(null , profile);
-  }
-));
+passport.use(
+  new GitHubStrategy(
+    {
+      clientID: process.env.GITHUB_CLIENT_ID as string,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+      callbackURL: `${process.env.frontURL}/auth/github/callback`,
+    },
+    function (accessToken: any, refreshToken: any, profile: any, done: any) {
+      return done(null, profile);
+    }
+  )
+);
 
 // Route to initiate Google OAuth flow
 app.get(
@@ -116,20 +127,27 @@ app.get(
 // Callback route that Google will redirect to after authentication
 app.get(
   "/auth/google/callback",
-  passport.authenticate("google",{session: false}),
+  passport.authenticate("google", { session: false }),
   googleLogin
 );
 
-app.get('/auth/github',
-  passport.authenticate('github', { scope: [ 'user:email' ] }));
+app.get(
+  "/auth/github",
+  passport.authenticate("github", { scope: ["user:email"] })
+);
 
-app.get('/auth/github/callback', 
-  passport.authenticate('github', { failureRedirect: '/login' , session: false }),
-  githubLogin);
+app.get(
+  "/auth/github/callback",
+  passport.authenticate("github", {
+    failureRedirect: "/login",
+    session: false,
+  }),
+  githubLogin
+);
 
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
-app.use("/post", postRouter); 
+app.use("/post", postRouter);
 app.use("/comment", commentRouter);
 app.use("/msg", chatRouter);
 app.use("/story", storyRouter);
