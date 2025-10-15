@@ -12,7 +12,6 @@ const getUserData = () => {
 
     let fetchData = async()=>{
       const {data} = await axios.get(`${url}/user/me`,{withCredentials:true});
-
       dispatch(addUser(data.data));
     }
     fetchData();

@@ -8,7 +8,6 @@ const App = () => {
   getUserData();
 
 return (
-    // bg-gradient-to-r from-slate-900 to-slate-700
     <>
    <ReactLenis root options={{
         duration: 0.8,       
