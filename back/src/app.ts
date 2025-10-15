@@ -28,9 +28,6 @@ import { githubLogin } from "./controllers/github.controller.js";
 
 const port = process.env.PORT || 8000;
 import MongoStore from "connect-mongo";
-
-import path from 'path';
-
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
@@ -42,7 +39,6 @@ legacyHeaders: false,
 const app = express();
 
 app.use(express.json());
-
 app.use(cookieparser());
 app.use(session({
   secret: `my-secret`,
@@ -134,11 +130,6 @@ app.get('/auth/github',
 app.get('/auth/github/callback', 
   passport.authenticate('github', { failureRedirect: '/' , session: false }),
   githubLogin);
-  
-app.use(express.static(path.join(__dirname,"front/dist")));
-app.get("*",(req,res)=>{
-  res.sendFile(path.join(__dirname,"front/dist","index.html"));
-})
 
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
