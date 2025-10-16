@@ -170,7 +170,7 @@ export const UnLikePost = async (req: Request, res: Response) => {
     const LikeObj = await postModel.findById(postId).select("like");
 
     const isLikeExist = LikeObj?.like.find(
-      (items: any) => items._id.toString() === req.user?._id
+      (items: any) => items._id === req.user?._id
     );
 
     if (!isLikeExist) {
