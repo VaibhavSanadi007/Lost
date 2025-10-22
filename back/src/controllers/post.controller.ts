@@ -1,83 +1,77 @@
 import { Request, Response } from "express";
-import imagekit from "../services/imagekit.services.js";
+import cloudinary from "../services/imagekit.services.js";
 import postModel from "../models/post.model.js";
 import redis from "../databases/redis.js";
 import { imageSize } from "image-size";
 import generateCaption from "../services/ai_caption.service.js";
 import followModel from "../models/follow.model.js";
+import streamifier from "streamifier";
 
-// import imageCompression from "browser-image-compression";
 
 export const createPost = async (req: Request, res: Response) => {
   try {
     const { postDescription, postTags, postType } = req.body;
-    
     const userFile = req.file;
-    
-    if (!userFile) {
-      return res.status(400).json({ message: "no file uploaded " });
-    }
 
-    if (!userFile?.buffer) {
-      return res.status(400).json({ error: "No file uploaded" });
+    if (!userFile || !userFile.buffer) {
+      return res.status(400).json({ message: "No file uploaded" });
     }
 
     if (postType === "Image") {
       const dimensions = imageSize(userFile.buffer);
+      const { width = 0, height = 0 } = dimensions;
 
-      
       const maxWidth = 10000;
       const maxHeight = 10000;
-      
       const minWidth = 100;
       const minHeight = 100;
-      
+
       if (
-        dimensions.width < minWidth ||
-        dimensions.height < minHeight ||
-        dimensions.width > maxWidth ||
-        dimensions.height > maxHeight
+        width < minWidth ||
+        height < minHeight ||
+        width > maxWidth ||
+        height > maxHeight
       ) {
         return res
           .status(400)
           .json({ error: "Image dimensions too large or too small" });
-        }
       }
-      
-      
-      // const options = {
-      //   maxSizeMB: 2, // compress to around 2MB
-      //   maxWidthOrHeight: 1920,
-      //   useWebWorker: true,
-      // };
+    }
 
-      // const compressedFile = await imageCompression(userFile,options);
-
-    const ArrayOfPost = postTags.split(" ");
-
-    const uploadResponse = await imagekit.upload({
-      file: userFile?.buffer!,
-      fileName: userFile?.originalname as string,
-      folder: "/social/",
-    });
+    const ArrayOfPost = postTags ? postTags.split(" ") : [];
 
 
-    const data = await postModel.create({
-      postUserId: req.user?._id,
-      postId: uploadResponse.fileId,
-      postUrl: uploadResponse.url,
-      postDescription: postDescription ? postDescription : "",
-      postTags: ArrayOfPost,
-      postType,
-    });
+    const uploadResponse = await cloudinary.uploader.upload_stream(
+      {
+        folder: "posts", 
+        resource_type: "auto", 
+      },
+      async (error, result) => {
+        if (error || !result) {
+          return res.status(500).json({ error: "Cloudinary upload failed" });
+        }
 
-    res.json({
-      success: true,
-      message: "File upload successful! 🎉",
-      data,
-    });
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+        const data = await postModel.create({
+          postUserId: req.user?._id,
+          postId: result.public_id,
+          postUrl: result.secure_url,
+          postDescription: postDescription || "",
+          postTags: ArrayOfPost,
+          postType,
+        });
+
+        return res.status(200).json({
+          success: true,
+          message: "File upload successful 🎉",
+          data,
+        });
+      }
+    );
+
+    streamifier.createReadStream(userFile.buffer).pipe(uploadResponse);
+  } catch (error: any) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -88,19 +82,23 @@ export const deletePost = async (req: Request, res: Response) => {
     const isPostExist = await postModel.findById(postId);
 
     if (!isPostExist) {
-      return res.status(400).json({ message: "post is not in db" });
+      return res.status(404).json({ message: "Post not found in database" });
     }
 
-    const data = await postModel.findByIdAndDelete(postId);
-    await imagekit.deleteFile(isPostExist.postId);
+    if (isPostExist.postId) {
+      await cloudinary.uploader.destroy(isPostExist.postId);
+    }
 
-    res.json({
+    const deletedPost = await postModel.findByIdAndDelete(postId);
+
+    res.status(200).json({
       success: true,
-      message: "File deleted successful! 🎉",
-      data,
+      message: "Post and Cloudinary file deleted successfully 🎉",
+      data: deletedPost,
     });
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+  } catch (error: any) {
+    console.error("Delete post error:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -290,7 +288,6 @@ export const getFeed = async (req: Request, res: Response) => {
   }
 };
 
-//under construction infinite pagination add sikhenge fir banayenge
 
 export const getCaption = async (req: Request, res: Response) => {
   try {

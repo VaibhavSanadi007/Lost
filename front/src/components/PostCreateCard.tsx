@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import type { RootState } from "../store/reduxStore";
 import { useState } from "react";
 import axios from "axios";
+import type {AxiosResponse} from 'axios';
 import { useNavigate } from "react-router-dom";
 import { CiImageOn } from "react-icons/ci";
 
@@ -42,17 +43,29 @@ const PostCreateCard = () => {
     navigate("/home");
   };
 
-  const handleCaption = async () => {
-    if (!file) return;
-    const formdata = new FormData();
-    formdata.append("file", file);
-    const { data } = await axios.post(
-      `${url}/post/getcaption`,
-      formdata,
-      { withCredentials: true }
-    );
-    setdescription(data.caption);
-  };
+const handleCaption = async () => {
+  if (!file) {
+    toast.error("No file selected");
+    return;
+  }
+
+  const formdata = new FormData();
+  formdata.append("file", file);
+
+  await toast.promise<AxiosResponse<any>, unknown>(
+    axios.post(`${url}/post/getcaption`, formdata, { withCredentials: true }),
+    {
+      pending: "Generating caption...",
+      success: "Caption fetched successfully 🎉",
+      error: "Failed to fetch caption 😢",
+    }
+  ).then((res) => {
+    setdescription(res.data.caption);
+  }).catch(() => {
+    // optional: additional error handling if needed
+  });
+};
+
 
   return (
     <section className="bg-white rounded-2xl shadow-sm border border-gray-200  xl:w-[50%] 2xl:w-[40%]">

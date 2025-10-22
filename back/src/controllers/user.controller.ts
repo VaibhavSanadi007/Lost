@@ -2,8 +2,8 @@ import { json, Request, Response } from "express";
 import userModel, { IUser } from "../models/user.model.js";
 import redis from "../databases/redis.js";
 import followModel from "../models/follow.model.js";
-import imagekit from "../services/imagekit.services.js";
-
+import cloudinary from "../services/imagekit.services.js";
+import streamifier from 'streamifier';
 type getObj = {
   username: string;
   email: string;
@@ -56,31 +56,55 @@ export const updateUserData = async (req: Request, res: Response) => {
     const userFile = req.file;
     const userId = req.params.id;
 
-    const uploadResponse = await imagekit.upload({
-      file: userFile?.buffer!,
-      fileName: userFile?.originalname as string,
-      folder: "/social/",
-    });
+    let dpUrl: string | undefined = undefined;
 
+    // 🔹 Upload new profile picture if provided
+    if (userFile?.buffer) {
+      const uploadResponse: any = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            folder: "profile_pics",
+            resource_type: "image", // profile pictures are always images
+          },
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result);
+          }
+        );
+        streamifier.createReadStream(userFile.buffer).pipe(uploadStream);
+      });
+
+      dpUrl = uploadResponse.secure_url;
+    }
+
+    // 🔹 Update user in DB
     const data = await userModel.findByIdAndUpdate(
       userId,
-      { username, email, name, description, tags, dp: uploadResponse.url },
+      {
+        username,
+        email,
+        name,
+        description,
+        tags,
+        ...(dpUrl && { dp: dpUrl }),
+      },
       { new: true }
     );
 
     if (!data) {
-      return res.status(400).json({ message: "update unsuccessful" });
+      return res.status(400).json({ message: "Update unsuccessful" });
     }
 
-    res.status(201).json({
-      message: "update successful",
+    res.status(200).json({
+      success: true,
+      message: "Update successful 🎉",
       data,
     });
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+  } catch (error: any) {
+    console.error("Update user error:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
-
 export const deleteUserData = async (req: Request, res: Response) => {
   try {
     const userId = req.params.id;

@@ -1,9 +1,9 @@
-import Imagekit from 'imagekit';
+import {v2 as cloudinary} from 'cloudinary';
 
-const imagekit = new Imagekit({
-   publicKey: process.env.IMAGEKIT_PUBLIC_KEY as string,
-    privateKey: process.env.IMAGEKIT_PRIVATE_KEY as string,
-    urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT as string
+cloudinary.config({ 
+  cloud_name: process.env.CLOUD_NAME, 
+  api_key: process.env.CLOUD_KEY, 
+  api_secret: process.env.CLOUD_API_SECRET
 });
 
-export default imagekit;
+export default cloudinary;

@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 const saltRounds = 10;
 import userModel from "../models/user.model.js";
@@ -9,7 +8,7 @@ import followModel from "../models/follow.model.js";
 import storyModel from "../models/story.model.js";
 import chatModel from "../models/socket.model.js";
 import postModel from "../models/post.model.js";
-import imagekit from "../services/imagekit.services.js";
+import cloudinary from "../services/imagekit.services.js";
 
 
 export const authRegister = async (req: Request, res: Response) => {
@@ -203,8 +202,13 @@ export const authDeleteAccount = async (req: Request, res: Response) => {
       return item.postId;
     });
   
-   const response = await imagekit.bulkDeleteFiles(postArr);
-    console.log(response);
+  const deleteResponses = await Promise.all(
+    postArr.map((publicId) =>
+      cloudinary.uploader.destroy(publicId, { resource_type: "auto" })
+    )
+  );
+
+  console.log(deleteResponses)
   }
 
   await userModel.findByIdAndDelete(userId);
@@ -242,4 +246,6 @@ export const authPrivacyAccount = async (req: Request, res: Response) => {
     message: "account privacy updated successfully",
   });
 };
+
+
 
