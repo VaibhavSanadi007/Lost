@@ -139,13 +139,13 @@ const handleCaption = async () => {
         <div className="flex-1" />
 
         {/* Publish button */}
-        <button
+        {mediaType == 'Image' && <button
           type="button"
           onClick={handleCaption}
           className="px-2 py-2 xl:px-2 xl:py-2 rounded-md text-gray-500 border border-gray-200 hover:bg-black hover:text-white duration-300 transition-all   cursor-pointer active:scale-95"
         >
           AI Caption
-        </button>
+        </button>}
         <button
           type="button"
           onClick={handleUpload}

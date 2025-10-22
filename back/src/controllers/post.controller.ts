@@ -21,59 +21,52 @@ export const createPost = async (req: Request, res: Response) => {
       const dimensions = imageSize(userFile.buffer);
       const { width = 0, height = 0 } = dimensions;
 
-      const maxWidth = 10000;
-      const maxHeight = 10000;
-      const minWidth = 100;
-      const minHeight = 100;
-
-      if (
-        width < minWidth ||
-        height < minHeight ||
-        width > maxWidth ||
-        height > maxHeight
-      ) {
-        return res
-          .status(400)
-          .json({ error: "Image dimensions too large or too small" });
+      if (width < 100 || height < 100 || width > 10000 || height > 10000) {
+        return res.status(400).json({ error: "Image dimensions too large or too small" });
       }
     }
 
     const ArrayOfPost = postTags ? postTags.split(" ") : [];
 
+    const uploadToCloudinary = (): Promise<any> => {
+      return new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            folder: "posts",
+            resource_type: "auto", 
+          },
+          (error, result) => {
+            if (error || !result) return reject(error);
+            resolve(result);
+          }
+        );
 
-    const uploadResponse = await cloudinary.uploader.upload_stream(
-      {
-        folder: "posts", 
-        resource_type: "auto", 
-      },
-      async (error, result) => {
-        if (error || !result) {
-          return res.status(500).json({ error: "Cloudinary upload failed" });
-        }
+        streamifier.createReadStream(userFile.buffer).pipe(uploadStream);
+      });
+    };
 
-        const data = await postModel.create({
-          postUserId: req.user?._id,
-          postId: result.public_id,
-          postUrl: result.secure_url,
-          postDescription: postDescription || "",
-          postTags: ArrayOfPost,
-          postType,
-        });
+    const result = await uploadToCloudinary();
 
-        return res.status(200).json({
-          success: true,
-          message: "File upload successful 🎉",
-          data,
-        });
-      }
-    );
+    const data = await postModel.create({
+      postUserId: req.user?._id,
+      postId: result.public_id,
+      postUrl: result.secure_url,
+      postDescription: postDescription || "",
+      postTags: ArrayOfPost,
+      postType,
+    });
 
-    streamifier.createReadStream(userFile.buffer).pipe(uploadResponse);
+    res.status(200).json({
+      success: true,
+      message: "File upload successful 🎉",
+      data,
+    });
   } catch (error: any) {
     console.error(error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
 
 export const deletePost = async (req: Request, res: Response) => {
   try {
