@@ -8,7 +8,7 @@ import { CreateSocketServer } from "../services/Socket";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../store/reduxStore";
 import { VscSend } from "react-icons/vsc";
-import { RiImageAiLine } from "react-icons/ri";
+// import { RiImageAiLine } from "react-icons/ri";
 import {
   addChat,
   deleteChat,
@@ -329,14 +329,14 @@ const MessageBox = () => {
               className="flex-1 items-center xl:py-2 xl:px-2 xl:h-10 scrollbar-hide  min-w-0 resize-none  outline-none text-sm "
             />
 
-            <label
+            {/* <label
             htmlFor="sendMsg"
               className="h-9 w-9 rounded-full inline-flex items-center justify-center hover:bg-gray-50"
               aria-label="Attach"
             >
               <RiImageAiLine size={25} className="active:scale-95" />
               <input type="file" name="sendMsg" id="sendMsg" className="hidden" />
-            </label>
+            </label> */}
 
             <button
               className="px-2"
