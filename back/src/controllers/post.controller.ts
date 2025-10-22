@@ -60,8 +60,7 @@ export const createPost = async (req: Request, res: Response) => {
       fileName: userFile?.originalname as string,
       folder: "/social/",
     });
-    
-    console.log(uploadResponse)
+
 
     const data = await postModel.create({
       postUserId: req.user?._id,
@@ -166,13 +165,13 @@ export const LikePost = async (req: Request, res: Response) => {
 export const UnLikePost = async (req: Request, res: Response) => {
   try {
     const { postId } = req.body;
-
+    
     const LikeObj = await postModel.findById(postId).select("like");
 
     const isLikeExist = LikeObj?.like.find(
-      (items: any) => items._id === req.user?._id
+      (items: any) => items._id.toString() === req.user?._id.toString()
     );
-
+ 
     if (!isLikeExist) {
       return res.status(400).json({ message: "post is already unliked" });
     }

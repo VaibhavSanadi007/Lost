@@ -91,8 +91,6 @@ passport.use(
       callbackURL: `${process.env.callbackURL}/auth/google/callback`,
     },
     (accessToken, refreshToken, profile, done) => {
-      // Here, you would typically find or create a user in your database
-      // For this example, we'll just return the profile
       return done(null, profile);
     }
   )
@@ -108,7 +106,7 @@ passport.use(new GitHubStrategy({
   }
 ));
 
-// Route to initiate Google OAuth flow
+
 app.get(
   "/auth/google",
   passport.authenticate("google", {
@@ -117,7 +115,7 @@ app.get(
   })
 );
 
-// Callback route that Google will redirect to after authentication
+
 app.get(
   "/auth/google/callback",
   passport.authenticate("google",{session: false}),
