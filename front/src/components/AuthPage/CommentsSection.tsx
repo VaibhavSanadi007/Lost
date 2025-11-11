@@ -91,7 +91,7 @@ const [commentOpen, setCommentOpen] = useState<menuType>({
   }, [postId]);
 
   return (
-    <div className="w-50  xl:w-[25%] xl:h-100 xl:py-2 fixed right-5 bg-white rounded-2xl">
+    <div className="w-50 lg:w-[25%] xl:w-[25%] xl:h-100 xl:py-2 fixed right-5 bg-white rounded-2xl">
       <div className="py-2 px-2.5 xl:px-2.5 xl:py-2 rounded-2xl border border-gray-200 " >
         <h1 className="border-b border-b-gray-200 xl:px-3 xl:py-1.5 font-semibold">
           Comments
@@ -111,7 +111,7 @@ const [commentOpen, setCommentOpen] = useState<menuType>({
             />
 
             <div className="xl:w-[90%]">
-              <div className="flex items-end xl:gap-2 ">
+              <div className="flex items-end lg:gap-5 xl:gap-2 ">
                 <h1 className="text-gray-400">{items.commentUserId.name}</h1>
                 <h1 className="text-[0.6rem] text-gray-300 xl:pb-0.5 hidden lg:block">
                   {moment(items.updatedAt).fromNow()}

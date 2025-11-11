@@ -215,7 +215,7 @@ const MessageBox = () => {
   };
 
   return (
-    <div className=" xl:w-[60%]   rounded-2xl overflow-hidden border border-gray-200 ">
+    <div className=" lg:w-[70%]  xl:w-[60%]   bg-amber-5 rounded-2xl overflow-hidden border border-gray-200 ">
       {/* menu modal */}
       {menu.visible && (
         <div
@@ -269,7 +269,7 @@ const MessageBox = () => {
         </div>
       )}
 
-      <header className="sticky top-0 z-10 xl:h-20 sm:h-14  border-b  border-gray-200 flex items-center px-3 sm:px-6">
+      <header className="sticky top-0 z-10 lg:h-20 xl:h-20 sm:h-14  border-b  border-gray-200 flex items-center px-3 sm:px-6">
         <div className="flex items-center gap-3">
           <img
             src={value.dp ? value.dp : defaultIcon}
@@ -320,13 +320,13 @@ const MessageBox = () => {
       </main>
 
       <footer className="sticky  bottom-6  border-t border-gray-200">
-        <div className="mx-auto xl:h-20   max-w-3xl px-3  py-3 ">
+        <div className="mx-auto lg:h-20 xl:h-20  max-w-3xl px-3  py-3 ">
           <div className="flex items-center gap-1 sm:gap-3  border  border-gray-200 rounded-full pl-3 pr-2 sm:pr-2.5 py-1.5 shadow-sm ">
             <textarea
               onChange={(e) => setmessage(e.target.value)}
               value={message}
               placeholder="Type a message..."
-              className="flex-1 items-center xl:py-2 xl:px-2 xl:h-10 scrollbar-hide  min-w-0 resize-none  outline-none text-sm "
+              className="flex-1 items-center lg:h-10 lg:py-2  xl:px-2  scrollbar-hide  min-w-0 resize-none  outline-none text-sm "
             />
 
             {/* <label

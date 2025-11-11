@@ -30,7 +30,7 @@ const Sidebar = () => {
 
 
   return (
-    <aside className="md:w-65 lg:w-70 xl:w-90 fixed left-0 top-0 xl:pl-25 lg:pl-15 md:pl-10 hidden md:block">
+    <aside className="md:w-65 lg:w-60 xl:w-70 fixed left-0 xl:left-15 top-0  lg:px-3.5 md:pl-10 hidden lg:block">
       <div className="flex flex-col w-full h-screen top-0">
         {/* Brand */}
         <div className="w-full md:h-25 lg:h-25 xl:h-30 flex items-center  ">
@@ -43,7 +43,7 @@ const Sidebar = () => {
         </div>
 
         {/* Nav */}
-        <nav className="bg-black backdrop-blur-2xl text-white rounded-xl overflow-hidden xl:pb-2 xl:pt-2 md:py-2 lg:py-2 xl:px-1  md:px-2 cursor-pointer flex flex-col lg:gap-2 xl:gap-4 md:gap-2">
+        <nav className="bg-black backdrop-blur-2xl text-white rounded-xl overflow-hidden xl:pb-2 xl:pt-2 md:py-2 lg:py-4 xl:px-1  md:px-2 cursor-pointer flex flex-col lg:gap-4 xl:gap-4 md:gap-2">
           <div className="flex items-center xl:px-2 xl:py-1.5 lg:gap-2 xl:gap-2 rounded-xl hover:bg-white/10" onClick={()=> navigate(`/home`)}>
           <GrHomeRounded size={20} />
           <h1 className="">Feed</h1>

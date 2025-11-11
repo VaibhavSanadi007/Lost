@@ -29,7 +29,7 @@ const LikesSection: FC<property> = ({ postId }) => {
   }, [postId]);
 
   return (
-    <div className=" w-50 h-70 md:h-80 lg:w-100 xl:w-[25%] rounded-2xl lg:h-100 xl:py-2 fixed xl:right-5 right-5 bg-white  ">
+    <div className=" w-50 h-70 md:h-80 lg:w-[25%] xl:w-[25%] rounded-2xl lg:h-100 xl:py-2 lg:py-3 fixed xl:right-5 right-5 bg-white  ">
       <div className=" xl:px-2.5 px-2 xl:py-2 rounded-2xl border border-gray-200">
         <h1 className="border-b border-b-gray-200 px-2 xl:px-3 xl:py-1.5 font-semibold">  
           Likes

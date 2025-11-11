@@ -9,7 +9,7 @@ const RightTrail: FC<property> = ({ flag }) => {
  
   return (
 
-    <aside className={` xl:block hidden xl:w-80 shrink-0 ${flag ? 'opacity-0 pointer-events-none':'' }`}>
+    <aside className={` lg:block  hidden lg:w-60 xl:w-80 shrink-0 ${flag ? 'opacity-0 pointer-events-none':'' }`}>
       <div className="sticky top-0 space-y-4 p-4">
         {/* Sponsored */}
         <div className="border border-gray-200 bg-white rounded-xl overflow-hidden">

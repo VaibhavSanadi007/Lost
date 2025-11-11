@@ -11,7 +11,7 @@ export interface IUser extends Document {
   description?: string;
   tags?: string[];
   role: string;
-  privateMode?: boolean;
+  privateMode?: string;
 }
 
 const userSchema: Schema<IUser> = new Schema(
@@ -55,8 +55,9 @@ const userSchema: Schema<IUser> = new Schema(
       default: "user",
     },
     privateMode: {
-      type: Boolean,
-      default: false,
+      type: String,
+      enum:["private","public"],
+      default: 'public',
     }
   },
   { timestamps: true }

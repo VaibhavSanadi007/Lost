@@ -55,7 +55,7 @@ const StoryRow: FC<property> = ({ setStoryModalFlag }) => {
        {
           storyOpen && <StoryView setStoryOpen={setStoryOpen} storyData={storyData}/>
         }
-      <div className="h-25 w-[80%] md:w-140   xl:h-30  border border-gray-200 rounded-2xl overflow-x-auto  flex items-center pl-2 xl:pl-2 pr-2 xl:gap-3 gap-3 scrollbar-hide ">
+      <div className="h-25  xl:w-full w-[100%]  xl:h-30  border border-gray-200 rounded-2xl overflow-x-auto  flex items-center pl-2 xl:pl-2 pr-2 xl:gap-3 gap-3 scrollbar-hide ">
         <div
           className={`w-15 h-20 xl:w-20 xl:h-25 rounded-2xl border border-gray-300 relative cursor-pointer p-2 flex items-center justify-center bg-gray-100 active:scale-95 flex-shrink-0`}
          onClick={()=>setStoryModalFlag(true)}>

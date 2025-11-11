@@ -97,7 +97,7 @@ const PostCard: FC<property> = ({ items, setflag, setPostId }) => {
   };
   console.log(items.postTags)
   return (
-    <article className="  border border-gray-200 rounded-2xl  xl:w-140  overflow-hidden ">
+    <article className="  border border-gray-200 rounded-2xl lg:w-110  xl:w-140  overflow-hidden ">
       {/* Header */}
       <div className="xl:h-17 h-15 px-4 xl:px-8 flex items-center gap-3">
         <div className="h-13 w-13 rounded-2xl overflow-hidden active:scale-95 cursor-pointer">
@@ -141,7 +141,7 @@ const PostCard: FC<property> = ({ items, setflag, setPostId }) => {
 
         {!items.postType || items.postType === "Image" ? (
           <img
-            className="  h-full  object-contain xl:h-80 "
+            className="  lg:h-80  object-contain  xl:h-80 "
             src={items.postUrl}
             alt="Team working in an office from Unsplash"
           />

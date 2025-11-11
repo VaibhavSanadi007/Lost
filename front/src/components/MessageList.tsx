@@ -35,15 +35,14 @@ useEffect(()=>{
 },[]);
 
   return (
-    <div className="h-full w-full flex pt-5 xl:pt-10 justify-center md:pl-70 lg:pl-0 ">
+    <div className="h-full w-full flex pt-5 xl:pt-10  lg:justify-center md:px-5 lg:px-0 lg:pl-0 ">
       <Sidebar/>
-      <div className="xl:w-130 px-2 xl:px-0">
+      <div className=" w-full md:w-140 lg:w-120 xl:w-130 px-2 xl:px-0">
         <h1 className="text-gray-500 text-3xl xl:text-4xl xl:mb-5 mb-3">Messages</h1>
-        <div className="xl:w-full">
-
+        <div className="xl:w-full ">
       {
         value ? value?.map((item,index)=>
-        <div key={index} className="xl:h-fit xl:py-3 py-2 w-full border border-gray-200 rounded-2xl xl:mb-2 mb-2 flex items-center xl:gap-4 gap-3 xl:px-3 px-3" onClick={()=>{
+        <div key={index} className="  h-fit xl:py-3 py-2 w-full border border-gray-200 rounded-2xl xl:mb-2 mb-2 flex items-center xl:gap-4 gap-3 xl:px-3 px-3" onClick={()=>{
           navigate('/messagebox/'+item.followerId._id);
         }}>
           <img src={item.followerId.dp ? item.followerId.dp :defaulticon}  className="w-15 h-15 rounded-2xl object-cover" />

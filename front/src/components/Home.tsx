@@ -36,11 +36,11 @@ const Home = () => {
   
   
   return (
-    <div className="h-full w-full flex justify-center xl:gap-10 xl:px-25 px-1 ">
-      <Sidebar />
-      <div className="h-fit md:w-[50%] flex flex-col items-center md:ml-50 lg:ml-50 xl:ml-100 ">
+    <div className="h-full w-full  flex justify-evenly xl:gap-5  ">
+      <Sidebar/>
+      <div className="h-fit w-full px-1 lg:w-[50%] xl:w-[40%] flex flex-col items-center md:px-5 lg:ml-65 xl:ml-90   ">
         <StoryRow setStoryModalFlag={setStoryModalFlag}  />
-        <div className="flex flex-col gap-4 xl:gap-5">
+        <div className="w-full flex flex-col gap-4 xl:gap-5">
           {userFeed.length ? userFeed.map((item, index) => {
             return (
               <PostCard
@@ -50,7 +50,7 @@ const Home = () => {
                 setPostId={setPostId}
               />
             );
-          }) : <h1 className="mt-5 text-center py-10 border border-gray-200 rounded-2xl  xl:w-140">No Feed please follow some users</h1> }
+          }) : <h1 className="xl:mt-5 text-center py-10 border border-gray-200 rounded-2xl  ">No Feed please follow some users</h1> }
         </div>
       </div>
 

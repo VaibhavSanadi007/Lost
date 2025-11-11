@@ -54,15 +54,15 @@ const Explore = () => {
   }, []);
 
   return (
-    <div className="w-full h-full md:pl-70 xl:pl-95 lg:pl-80 xl:pr-25 ">
+    <div className="w-full h-full lg:pl-60  xl:pl-95  xl:pr-25 ">
       <Sidebar />
-      <div className="w-full h-full">
-        <div className="w-full h-15 my-2 xl:h-30 flex items-center  relative">
+      <div className="w-full h-full px-4">
+        <div className="w-full h-15 my-2 lg:h-25 xl:h-30 flex items-center  relative">
           <input
             type="search"
             placeholder="search"
             onChange={(e) => setSearchInput(e.target.value)}
-            className="w-50 h-13 xl:w-80 bg-gray-200 outline-none xl:py-2  px-3 rounded-2xl"
+            className="w-full h-13  md:w-80 bg-gray-200 outline-none xl:py-2  px-3 rounded-2xl"
           />
 
          { searchInput && <div data-lenis-prevent className="absolute  h-125 xl:w-100 lg:w-80 lg:left-[30%] xl:left-[45%] 2xl:left-[35%] lg:top-10 xl:top-5 rounded-2xl overflow-hidden bg-black  xl:px-2  overflow-y-auto scrollbar-hide">
@@ -94,7 +94,7 @@ const Explore = () => {
             {recommend.length ? recommend.map((item, index) => (
               <div
                 key={index}
-                className="xl:h-35 xl:w-35 flex flex-col items-center rounded-2xl border border-gray-200 xl:p-2"
+                className="h-25 w-25  xl:h-35 xl:w-35 flex flex-col items-center rounded-2xl border border-gray-200 xl:p-2"
                 onClick={() => {
                   navigate(`/viewuser/${item._id}`);
                 }}
@@ -108,7 +108,7 @@ const Explore = () => {
               </div>
             )) : 
             arr.map((item,index)=>(
-              <div key={index} className="xl:h-35 xl:w-35 flex flex-col items-center rounded-2xl border border-gray-200 xl:p-2">
+              <div key={index} className="h-25 w-25 xl:h-35 xl:w-35 flex flex-col justify-evenly items-center rounded-2xl border border-gray-200 xl:p-2">
                 <div className="h-15 w-15 xl:h-20 xl:w-20 rounded-2xl bg-gray-400 animate-pulse" />
                 <h1>{item}</h1>
               </div> 

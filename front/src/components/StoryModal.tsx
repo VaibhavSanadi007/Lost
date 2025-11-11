@@ -53,7 +53,7 @@ const StoryModal: FC<property> = ({ setStoryModalFlag }) => {
 
   return (
     <div className="w-full h-full bg-black/80 fixed top-0 left-0 flex items-center justify-center text-white">
-      <div className="h-[80%] w-[30%] rounded-2xl flex flex-col gap-2.5 ">
+      <div className="h-[80%] w-[80%] lg:w-[40%] xl:w-[30%] rounded-2xl flex flex-col gap-2.5 ">
         <div className="flex items-center justify-between px-6 h-[5%]">
           <FaArrowLeft
             className="active:scale-90"

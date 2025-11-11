@@ -66,43 +66,39 @@ const EditProfileModal: FC<property> = ({ setopen }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex sm:items-center justify-center sm:p-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center sm:p-6 ">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-gray-950/85"
+        className="absolute inset-0 bg-black/90 backdrop-blur"
         aria-hidden="true"
         onClick={() => setopen(false)}
       />
-      <div className="relative xl:w-[35%] h-fit bg-white rounded-2xl shadow-xl">
+      <div className="relative xl:w-[50%] h-fit bg-white  rounded-xl shadow-xl">
         {/* Header */}
-        <div className="px-5 sm:px-6 py-2 border-b border-gray-200  ">
-          <h2 className="text-lg font-semibold">Edit Profile</h2>
+        <div className="px-5 md:px-6 md:py-2  ">
+          <h2 className="text-2xl font-semibold">Edit Profile</h2>
         </div>
 
         {/* Body */}
-        <div className="px-5 sm:px-6 space-y-1.5  ">
-          {/* Profile picture + Cover */}
-          <div className="">
-            {/* Avatar column */}
-            <div className=" xl:mb-2">
+        <div className=" xl:h-100 xl:w-full lg:w-150  px-3 flex flex-col md:flex-row gap-5 ">
 
-              <main className="flex items-center xl:gap-3">
+
+              <main className=" h-[30%] w-[30%]  lg:w-[80%] xl:w-full md:w-[50%]  flex items-center justify-center ">
                 {/* Placeholder upload button */}
-                <label htmlFor="fileInput" className=" xl:px-2 xl:py-1 cursor-pointer rounded xl:text-sm "> Upload img
-                <img src={imageUrl?imageUrl:defaultIcon} className="mt-2 xl:h-40 xl:w-40 rounded-2xl bg-gray-300 object-cover" />
+                <label htmlFor="fileInput" className="cursor-pointer  text-sm h-full w-full   xl:h-[90%] xl:w-[90%] "> 
+                <img src={imageUrl?imageUrl:defaultIcon} className=" rounded bg-gray-300 object-cover" />
                    <input type="file" name="fileInput" id="fileInput" className="hidden"  onChange={handleChange} />
                 </label>
               </main>
               
-            </div>
+           
 
-          </div>
-
+          <div className="w-full flex flex-col ">
           {/* Name */}
           <div className="">
             <label
               htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
+              className="hidden md:block text-sm font-medium"
             >
               Name
             </label>
@@ -120,7 +116,7 @@ const EditProfileModal: FC<property> = ({ setopen }) => {
           <div>
             <label
               htmlFor="username"
-              className="block text-sm font-medium text-gray-700"
+              className="hidden md:block text-sm font-medium "
             >
               Username
             </label>
@@ -136,7 +132,7 @@ const EditProfileModal: FC<property> = ({ setopen }) => {
 
           {/* Description (renamed from Bio) */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="hidden md:block text-sm font-medium ">
               Description
             </label>
             <textarea
@@ -149,7 +145,7 @@ const EditProfileModal: FC<property> = ({ setopen }) => {
 
           {/* Tags input */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="hidden md:block text-sm font-medium ">
               Tags
             </label>
             <input
@@ -160,24 +156,28 @@ const EditProfileModal: FC<property> = ({ setopen }) => {
             />
             <p className="mt-2  text-xs text-gray-500"></p>
           </div>
-        </div>
 
         {/* Footer */}
         <div className="px-5 sm:px-6 py-4 border-t border-gray-200 flex items-center justify-end gap-3">
           <button
             // onClick={onClose}
-            className="active:scale-95 cursor-pointer px-4 py-2 text-sm rounded-md border border-gray-300 hover:bg-gray-50"
+            className="active:scale-95 cursor-pointer px-4 py-2 text-sm rounded-md border  hover:bg-white/10"
             onClick={() => setopen(false)}
           >
             Cancel
           </button>
           <button
-            className="active:scale-95 cursor-pointer px-4 py-2 text-sm rounded-md text-white bg-gradient-to-r from-indigo-600 to-fuchsia-500 hover:from-indigo-700 hover:to-fuchsia-600"
+            className="active:scale-95 cursor-pointer px-4 py-2 text-sm rounded-md text-white bg-black"
             onClick={() => handleEditUpload()}
           >
             Save Changes
           </button>
         </div>
+
+        </div>
+
+          </div>
+
       </div>
     </div>
   );

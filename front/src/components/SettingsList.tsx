@@ -22,10 +22,10 @@ const SettingsList:FC<property> = ({setSettingmode}) => {
               <RiDeleteBin5Line />
               <h1 className="">Delete account</h1>
               </div>
-               <div className="flex items-center xl:px-2  xl:py-1.5 xl:gap-2 md:gap-2 rounded-xl hover:bg-white/10" onClick={()=>setSettingmode('private')} >
+               {/* <div className="flex items-center xl:px-2  xl:py-1.5 xl:gap-2 md:gap-2 rounded-xl hover:bg-white/10" onClick={()=>setSettingmode('private')} >
               <RiGitRepositoryPrivateLine />
               <h1 className="">Private account</h1>
-              </div>
+              </div> */}
               {/* <div className="flex items-center xl:px-2  xl:py-1.5 xl:gap-2 md:gap-2 rounded-xl hover:bg-white/10" onClick={()=>setThemeMode(!themeMode)} >
               {
                 themeMode ?
