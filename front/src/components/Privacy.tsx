@@ -1,11 +1,11 @@
 import axios from "axios";
 import {  useState } from "react"
 import { url } from "../App";
-import { useSelector } from "react-redux";
-import type { RootState } from "../store/reduxStore";
+// import { useSelector } from "react-redux";
+// import type { RootState } from "../store/reduxStore";
 
 const Privacy = () => {
-  const userData = useSelector((item:RootState)=>item.user);
+  // const userData = useSelector((item:RootState)=>item.user);
   const [privateMode,setPrivateMode] = useState<string>('private');
 
     const handlePrivacy = async (privacyValue:string)=>{

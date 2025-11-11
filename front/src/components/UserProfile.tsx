@@ -27,7 +27,7 @@ const UserProfile:FC<property> = ({value,setopenFollowers,setopenFollowing}) => 
     tags: [],
     followers: [],
     following: [],
-    privateMode: false,
+    privateMode: '',
   });
 
   const { userId } = useParams();

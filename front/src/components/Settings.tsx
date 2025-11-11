@@ -1,6 +1,6 @@
 import DeleteAccount from "./DeleteAccount";
 import PasswordChange from "./PasswordChange"
-import Privacy from "./Privacy";
+// import Privacy from "./Privacy";
 import Sidebar from "./Sidebar"
 
 const Settings = () => {
