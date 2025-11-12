@@ -30,7 +30,7 @@ const port = process.env.PORT || 8000;
 import MongoStore from "connect-mongo";
 const limiter = rateLimit({
   windowMs: 5 * 60 * 1000,
-  max: 100,
+  max: 200,
   message: "too many attempts plz try again later",
   standardHeaders: true,
 legacyHeaders: false,
