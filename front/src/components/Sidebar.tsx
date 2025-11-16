@@ -13,7 +13,7 @@ import { CgProfile } from "react-icons/cg";
 import { IoSettingsOutline } from "react-icons/io5";
 import {  MdLogout } from "react-icons/md";
 import { PiImage } from "react-icons/pi";
-import { AiOutlineRobot } from "react-icons/ai";
+// import { AiOutlineRobot } from "react-icons/ai";
 
 import { url } from "../App";
 
