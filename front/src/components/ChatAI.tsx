@@ -41,7 +41,6 @@ const ChatAI = () => {
     if (!myid) {
       return;
     }
-    if (!socketRef.current) {
       const socket = CreateSocketServer();
       socket.connect();
       socketRef.current = socket;
@@ -54,7 +53,6 @@ const ChatAI = () => {
 }));
       });
 
-    }
 
     return () => {
       socketRef.current?.disconnect();
