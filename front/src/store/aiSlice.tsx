@@ -23,8 +23,8 @@ const chatSlice = createSlice({
     addMessage: (state, action) => {
       state.push(action.payload);
     },
-    clearMessages: (state) => {
-      state = [];
+    clearMessages: () => {
+      return [];
     },
   },
 });
