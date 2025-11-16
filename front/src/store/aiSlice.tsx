@@ -17,7 +17,7 @@ const chatSlice = createSlice({
   name: "aichat",
   initialState,
   reducers: {
-    setMessages: (state, action) => {
+    setMessages: (_, action) => {
       return action.payload;
     },
     addMessage: (state, action) => {
