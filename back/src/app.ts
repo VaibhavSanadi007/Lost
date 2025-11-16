@@ -12,13 +12,10 @@ import postRouter from "./routes/post.router.js";
 import commentRouter from "./routes/comment.routers.js";
 import { socketServer } from "./services/socket.services.js";
 import chatRouter from "./routes/chat.router.js";
-// import nodemailer from 'nodemailer';
 import compression from 'compression';
 import storyRouter from './routes/story.routers.js';
-
 import session from 'express-session';
 import requestIp from 'request-ip';
-
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { Strategy as GitHubStrategy } from "passport-github2";
@@ -71,17 +68,7 @@ app.use(compression({
     return compression.filter(req,res);
   },
 }))
-// const transporter = nodemailer.createTransport({
-//   host: `smtp.gmail.com`,
-//   port: 587,
-//   secure: false,
-//   auth: {
-//     user: 'vaibhavbhausanadi007@gmail.com',
-//     pass: process.env.EMAIL_PASS,
-//   }
-// })
 
-// Configure Passport to use Google OAuth 2.0 strategy
 
 passport.use(
   new GoogleStrategy(

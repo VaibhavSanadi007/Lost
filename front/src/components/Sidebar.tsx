@@ -13,6 +13,7 @@ import { CgProfile } from "react-icons/cg";
 import { IoSettingsOutline } from "react-icons/io5";
 import {  MdLogout } from "react-icons/md";
 import { PiImage } from "react-icons/pi";
+import { AiOutlineRobot } from "react-icons/ai";
 
 import { url } from "../App";
 
@@ -55,6 +56,10 @@ const Sidebar = () => {
           <div className="flex items-center xl:px-2  xl:py-1.5 lg:gap-2 xl:gap-2 rounded-xl hover:bg-white/10" onClick={()=>navigate(`/explore`)}>
           <FiCompass size={20}/>
           <h1 className="">Explore</h1>
+          </div>
+          <div className="flex items-center xl:px-2  xl:py-1.5 lg:gap-2 xl:gap-2 rounded-xl hover:bg-white/10" onClick={()=>navigate(`/ai`)}>
+          <AiOutlineRobot size={20} />
+          <h1 className="">chat AI</h1>
           </div>
           <div className="flex items-center xl:px-2  xl:py-1.5 lg:gap-2 xl:gap-2 rounded-xl hover:bg-white/10" onClick={()=>navigate(`/profile/${userData._id}`)}>
           <CgProfile size={20} />

@@ -1,5 +1,8 @@
 import { Server } from "socket.io";
 import chatModel from "../models/socket.model.js";
+import { createMemory, queryMemory } from "./vector.service.js";
+import { generateResponse, generateVector } from "./ai_chat.service.js";
+import aiChatModel from '../models/Chat_ai.model.js';
 
 const getRoomId = (senderid: string, recieverid: string) => {
   return [senderid, recieverid].sort().join("_");
@@ -77,7 +80,87 @@ export const socketServer = async (httpServer: object) => {
       } catch (err) {
         console.log(err);
       }
-    })
+    });
+
+    socket.on("ai-message",async (messagePayload)=>{
+
+      const [message,vectors] = await Promise.all([
+        aiChatModel.create({
+        user: messagePayload.user._id,
+        content: messagePayload.content,
+        role: "user",
+      }),
+       generateVector(messagePayload.content) ,
+      ])
+
+      
+      await createMemory({
+        vectors,
+        messageId: message._id.toString(),
+        metadata:{
+          user: messagePayload.user._id,
+          text: messagePayload.content
+        }
+      })
+      
+      const [memory,chatHistory] = await Promise.all([
+        queryMemory({
+        queryVector: vectors!,
+        limit:3,
+        metadata:{
+          user: messagePayload.user._id
+        }
+      }),
+      
+      (await aiChatModel.find({
+        user: messagePayload.user._id,
+      }).sort({createdAt:-1}).limit(4).lean()).reverse()
+
+      ])
+      
+    
+
+      const stm = chatHistory.map(item => {
+        return {
+          role : item.role,
+          parts : [{text : item.content}]
+        }
+      })
+
+      const ltm = [
+        {
+          role: "user",
+          parts: [{text:` these are some previous messages from the chats, use them to generate a response
+              ${memory.map(item => item?.metadata?.text).join("\n")}  
+            `}]
+        }
+      ]
+
+       const response = await generateResponse([ ...ltm , ...stm]);
+
+       socket.emit('ai-message',{
+         content: response
+        })
+        
+        const [responseMessage,responseVectors] = await Promise.all([
+          aiChatModel.create({
+             user: messagePayload.user._id,
+             content: response,
+             role: "model",
+           })
+           ,
+           generateVector(response!),
+        ]) 
+
+          await createMemory({
+           vectors : responseVectors!,
+           messageId: responseMessage._id.toString(),
+           metadata:{  
+             user: messagePayload.user._id,
+             text: response
+           }
+         })
+        });
 
     socket.on("disconnect", () => {
       console.log("socket disconnected");

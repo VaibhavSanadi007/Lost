@@ -75,7 +75,7 @@ const Explore = () => {
                   className="h-15 w-15 xl:h-full xl:w-15 object-cover rounded-2xl"
                 />
                 <div className="text-white ">
-                  <h1 >{item.name}</h1>
+                  <h1>{item.name}</h1>
                   <h1 className="text-[0.7rem] text-gray-600 ">@{item.username}</h1>
                 </div>
               </div>
@@ -103,8 +103,8 @@ const Explore = () => {
                   src={item.dp ? item.dp : defaultIcon}
                   className="h-15 w-15 xl:h-20 xl:w-20 rounded-2xl object-cover"
                 />
-                <h1 className="">{item.name}</h1>
-                <h1 className="text-sm text-gray-300">@{item.username}</h1>
+                <h1 className="text-sm">{item.name || "[no name]"}</h1>
+                <h1 className="text-[0.7rem] text-gray-300">@{item.username}</h1>
               </div>
             )) : 
             arr.map((item,index)=>(

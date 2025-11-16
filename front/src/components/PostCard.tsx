@@ -95,7 +95,7 @@ const PostCard: FC<property> = ({ items, setflag, setPostId }) => {
         setcommentInput("");
       });
   };
-  console.log(items.postTags)
+  
   return (
     <article className="  border border-gray-200 rounded-2xl lg:w-110  xl:w-140  overflow-hidden ">
       {/* Header */}

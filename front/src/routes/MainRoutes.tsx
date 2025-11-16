@@ -9,6 +9,7 @@ import Explore from "../components/Explore"
 import SignIn from "../components/AuthPage/SignIn"
 import SignUp from "../components/AuthPage/SignUp"
 import Settings from "../components/Settings"
+import ChatAI from "../components/ChatAI"
 
 
 const MainRoutes = () => {
@@ -24,6 +25,7 @@ const MainRoutes = () => {
       <Route path="/viewuser/:userId" element={<ViewUserProfile/>} />
       <Route path="/explore" element={<Explore/>} />
       <Route path="/setting" element={<Settings/>} />
+      <Route path="/ai" element={<ChatAI/>} />
     </Routes>
   )
 }

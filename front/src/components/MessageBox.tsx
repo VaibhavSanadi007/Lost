@@ -139,8 +139,7 @@ const MessageBox = () => {
         dispatch(addChat(data));
       });
 
-      
-
+  
       socket.on("deleteMsg",(msgId)=>{
         dispatch(deleteChat(msgId));
       })

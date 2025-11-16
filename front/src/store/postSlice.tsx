@@ -49,7 +49,6 @@ const postSlice = createSlice({
       if (post) {
         post.like.push(action.payload.userId);
       }
-      console.log(state);
     },
     removeLike: (state, action) => {
       const post = state.find((item) => item._id === action.payload._id);
