@@ -10,22 +10,50 @@ import SignIn from "../components/AuthPage/SignIn"
 import SignUp from "../components/AuthPage/SignUp"
 import Settings from "../components/Settings"
 import ChatAI from "../components/ChatAI"
+import ProtectedRoute from "../custom_component/Protected_route"
+
 
 
 const MainRoutes = () => {
+
   return (
     <Routes>
       <Route path="/" element={<SignIn/>} />
       <Route path="/signup" element={<SignUp/>} />
-      <Route path="/home" element={<Home/>} />
-      <Route path="/messagelist/:userId" element={<MessageList/>} />
-      <Route path="/messagebox/:userId" element={<MessageLayout/>} />
-      <Route path="/profile/:userId" element={<Profile/>} />
-      <Route path="/createpost" element={<CreatePost/>} />
-      <Route path="/viewuser/:userId" element={<ViewUserProfile/>} />
-      <Route path="/explore" element={<Explore/>} />
-      <Route path="/setting" element={<Settings/>} />
-      <Route path="/ai" element={<ChatAI/>} />
+     <Route path="/home" element={<ProtectedRoute><Home/></ProtectedRoute>} />
+
+<Route path="/messagelist/:userId" 
+  element={<ProtectedRoute><MessageList/></ProtectedRoute>} 
+/>
+
+<Route path="/messagebox/:userId" 
+  element={<ProtectedRoute><MessageLayout/></ProtectedRoute>} 
+/>
+
+<Route path="/profile/:userId" 
+  element={<ProtectedRoute><Profile/></ProtectedRoute>} 
+/>
+
+<Route path="/createpost" 
+  element={<ProtectedRoute><CreatePost/></ProtectedRoute>} 
+/>
+
+<Route path="/viewuser/:userId" 
+  element={<ProtectedRoute><ViewUserProfile/></ProtectedRoute>} 
+/>
+
+<Route path="/explore" 
+  element={<ProtectedRoute><Explore/></ProtectedRoute>} 
+/>
+
+<Route path="/setting" 
+  element={<ProtectedRoute><Settings/></ProtectedRoute>} 
+/>
+
+<Route path="/ai" 
+  element={<ProtectedRoute><ChatAI/></ProtectedRoute>} 
+/>
+
     </Routes>
   )
 }

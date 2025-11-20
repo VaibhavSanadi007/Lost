@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import type { RootState } from "../store/reduxStore";
 
@@ -17,17 +17,21 @@ import { PiImage } from "react-icons/pi";
 
 import { url } from "../App";
 import { AiOutlineRobot } from "react-icons/ai";
+import { addUser } from "../store/userSlice";
 
 const Sidebar = () => {
   const userData = useSelector((item: RootState) => item.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogout = async () => {
-    const data = await axios.get(`${url}/auth/logout`, {
+    await axios.get(`${url}/auth/logout`, {
       withCredentials: true,
-    });
-    navigate(`/`);
-    console.log(data);
+    }).then(()=>{
+      navigate(`/`);
+      dispatch(addUser({}));
+    })
+    
   };
 
 
@@ -77,7 +81,7 @@ const Sidebar = () => {
         </nav>
 
         {/* Create Post button */}
-        <div className="w-full xl:h-45 md:h-40 md:pb-8 flex items-end xl:pb-8 justify-center">
+        <div className="w-full xl:h-25 md:h-25 md:pb-8 flex items-end xl:pb-8 justify-center">
           {/* <button
             className="xl:w-full rounded-2xl md:h-10 md:px-5 md:w-full xl:h-10 bg-black  text-white  font-medium xl:px-5  flex items-center justify-between"
           >
