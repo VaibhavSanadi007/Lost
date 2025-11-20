@@ -17,7 +17,7 @@ export type QueryMemoryParams = {
 // Initialize a Pinecone client with your API key
 const pc = new Pinecone({ apiKey: process.env.PINECONE_API_KEY!});
 
-const cohortChatgptIndex = pc.Index('chatgpt');
+const cohortChatgptIndex = pc.Index('chat');
 
 export async function createMemory({vectors,metadata,messageId}:CreateMemoryParams) {
   await cohortChatgptIndex.upsert([{
