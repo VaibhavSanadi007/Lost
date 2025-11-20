@@ -1,6 +1,6 @@
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
-import { FaGithub } from "react-icons/fa6";
+// import { FaGithub } from "react-icons/fa6";
 import { FaRegEye , FaEyeSlash } from "react-icons/fa";
 import { DiMysql } from "react-icons/di";
 
@@ -55,15 +55,15 @@ const SignUp = () => {
     }
   };
 
-   const handleGithubLogin = async () => {
-    try {
-      window.location.href = `${url}/auth/github`;
+  //  const handleGithubLogin = async () => {
+  //   try {
+  //     window.location.href = `${url}/auth/github`;
       
-    }  catch (err:any) {
-      console.log("Error :",err);
-      toast.error(err.response.data.message)
-    }
-  };
+  //   }  catch (err:any) {
+  //     console.log("Error :",err);
+  //     toast.error(err.response.data.message)
+  //   }
+  // };
 
 
   return (
@@ -153,10 +153,10 @@ const SignUp = () => {
             <FcGoogle size={25} />
             Continue with Google
           </button>
-          <button className="cursor-pointer active:scale-95 border h-10 xl:h-10 xl:w-60 rounded-2xl flex items-center justify-center xl:gap-3" onClick={()=>handleGithubLogin()}>
+          {/* <button className="cursor-pointer active:scale-95 border h-10 xl:h-10 xl:w-60 rounded-2xl flex items-center justify-center xl:gap-3" onClick={()=>handleGithubLogin()}>
             <FaGithub size={25} />
             Continue with Github
-          </button>
+          </button> */}
 
         </div>
       </div>
