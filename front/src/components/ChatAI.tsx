@@ -6,8 +6,10 @@ import type { RootState } from "../store/reduxStore";
 import { VscSend } from "react-icons/vsc";
 
 import Sidebar from "./Sidebar";
-import { addMessage } from "../store/aiSlice";
+import { addMessage, setMessages } from "../store/aiSlice";
 import { AiOutlineRobot } from "react-icons/ai";
+import axios from "axios";
+import { url } from "../App";
 
 const ChatAI = () => {
   const UserData = useSelector((items: RootState) => items.user);
@@ -75,6 +77,15 @@ const ChatAI = () => {
     setmessage("");
   };
 
+   async function aichat(): Promise <void> {
+      const data = await axios.get(`${url}/msg/aichat`,{withCredentials:true});
+      dispatch(setMessages(data.data.data));
+  }
+
+  useEffect(()=>{
+    aichat();
+  },[]);
+
   return (
     <div className="w-full h-screen  flex items-center justify-center ">
       <Sidebar />
@@ -128,7 +139,7 @@ const ChatAI = () => {
           </div>
         </main>
 
-        <footer className="sticky  bottom-6  border-t border-gray-200">
+        <footer className="sticky  bottom-6  border-t bg-white border-gray-200">
           <div className="mx-auto lg:h-20 xl:h-20  max-w-3xl px-3  py-3 ">
             <div className="flex items-center gap-1 sm:gap-3  border  border-gray-200 rounded-full pl-3 pr-2 sm:pr-2.5 py-1.5 shadow-sm ">
               <textarea
