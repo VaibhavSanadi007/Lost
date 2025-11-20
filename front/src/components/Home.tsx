@@ -11,6 +11,7 @@ import CommentsSection from "./AuthPage/CommentsSection";
 import LikesSection from "./AuthPage/LikesSection";
 import { url } from "../App";
 import StoryModal from "./StoryModal";
+import getUserData from "../custom_component/GetUserData";
 
 const Home = () => {
   
@@ -29,6 +30,7 @@ const Home = () => {
     dispatch(addPost(data.data));
   };
   
+  getUserData();
   useEffect(() => {
     getFeed();
   }, []);

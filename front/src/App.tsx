@@ -1,12 +1,9 @@
-import getUserData from "./custom_component/GetUserData";
 import MobileMenu from "./pages/MobileMenu";
 import MainRoutes from "./routes/MainRoutes"
 import { ReactLenis } from 'lenis/react'
 export const url = import.meta.env.VITE_backUrl;
 
 const App = () => {
-
-  getUserData();
 
 return (
     <>

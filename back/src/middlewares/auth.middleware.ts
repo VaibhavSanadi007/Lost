@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import userModel, { IUser } from "../models/user.model.js";
+import userModel  from "../models/user.model.js";
 import { refreshTokens } from "../services/auth.service.js";
 import { Types } from "mongoose";
 
@@ -26,73 +26,57 @@ declare global {
   }
 }
 
-export const authMiddleware = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const authMiddleware = async (req:Request, res:Response, next:NextFunction) => {
   try {
     const accessToken = req.cookies.access_token;
     const refreshToken = req.cookies.refresh_token;
 
     if (!accessToken && !refreshToken) {
-      return next();
+      return res.status(401).json({ message: "Unauthorized" });
     }
 
     if (accessToken) {
-      const Tokendata = jwt.verify( accessToken, process.env.JWT_SECRET! ) as myjwtpayload;
-      const isUserExist = await userModel.findOne({
-                $or: [{ _id: Tokendata._id }, { username: Tokendata.username }],
-              });       
-    if (!isUserExist) {
-        return res.status(400).send("User is not in db");
-      }
-      req.user = isUserExist;
-      return next();
-    }
+      try {
+        const payload = jwt.verify(accessToken, process.env.JWT_SECRET! ) as unknown  as myjwtpayload ;
 
-    if(refreshToken){
-      try{
-        const result = await refreshTokens(refreshToken); 
+        const user = await userModel.findById(payload._id);
+        if (!user) return res.status(400).send("User does not exist");
 
-        if (!result) {
-      throw new Error("Failed to refresh tokens");
-        }
-
-        const {NewAccessToken , NewRefreshToken , user } = result;
- 
         req.user = user;
+        return next();
+      } catch (err) {}
+    }
 
-         res.cookie('access_token', NewAccessToken ,{
-     httpOnly: true,
-     secure: true,
-     sameSite: "none",  
-     maxAge: 15 * 60 * 1000,
-   }
-  )
-    res.cookie('refresh_token', NewRefreshToken ,{
-     httpOnly: true,
-     secure: true,
-     sameSite: "none",  
-     maxAge: 7 * 24 * 60 * 60 * 1000,
-   }
-  );
+    if (refreshToken) {
+      try {
+        const result = await refreshTokens(refreshToken);
+        if (!result) throw new Error("Refresh failed");
 
-  return next();
+        const { NewAccessToken, NewRefreshToken, user } = result;
 
-      }catch(err : unknown ){
-        if(err instanceof Error){
-          console.log(err.message);
-        }else{
-          console.log("unknown error",err);
-        }
+        res.cookie("access_token", NewAccessToken, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+          maxAge: 15 * 60 * 1000,
+        });
+        res.cookie("refresh_token", NewRefreshToken, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+          maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+
+        req.user = user;
+        return next();
+      } catch (err) {
+        res.clearCookie("access_token");
+        res.clearCookie("refresh_token");
+        return res.status(401).json({ message: "Invalid refresh token" });
       }
     }
-    
-  return next();
-
   } catch (error) {
-    return res.status(401).json({ message: "Unauthorized", error });
+    return res.status(500).json({ message: "Server error", error });
   }
 };
 

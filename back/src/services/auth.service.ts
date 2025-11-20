@@ -16,6 +16,9 @@ type typeAcessToken = {
 
 
 export interface myjwtpayload extends JwtPayload {
+   _id: Types.ObjectId;
+  username: string;
+  email: string;
   sessionId: Types.ObjectId;
 }
 
@@ -25,7 +28,7 @@ export const createSession = async (userId: Types.ObjectId  ,{ ipAddress, userAg
     userId,
     ipAddress,
     userAgent,
-    expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    expiresAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
   });
   return session;
 }
@@ -35,7 +38,7 @@ export const createAccessToken = async ({_id,username,email,sessionId}: typeAces
 }
 
 export const createRefreshToken = async (sessionId : Types.ObjectId) => {
-  return jwt.sign({sessionId},process.env.JWT_SECRET!,{expiresIn: `7d`});
+  return jwt.sign({sessionId},process.env.JWT_SECRET!,{expiresIn: `3d`});
 }
 
 export const findSessionById = async (sessionId:Types.ObjectId) => {
