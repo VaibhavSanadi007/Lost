@@ -16,6 +16,7 @@ import { PiImage } from "react-icons/pi";
 // import { AiOutlineRobot } from "react-icons/ai";
 
 import { url } from "../App";
+import { AiOutlineRobot } from "react-icons/ai";
 
 const Sidebar = () => {
   const userData = useSelector((item: RootState) => item.user);
@@ -57,10 +58,10 @@ const Sidebar = () => {
           <FiCompass size={20}/>
           <h1 className="">Explore</h1>
           </div>
-          {/* <div className="flex items-center xl:px-2  xl:py-1.5 lg:gap-2 xl:gap-2 rounded-xl hover:bg-white/10" onClick={()=>navigate(`/ai`)}>
+          <div className="flex items-center xl:px-2  xl:py-1.5 lg:gap-2 xl:gap-2 rounded-xl hover:bg-white/10" onClick={()=>navigate(`/ai`)}>
           <AiOutlineRobot size={20} />
           <h1 className="">chat AI</h1>
-          </div> */}
+          </div>
           <div className="flex items-center xl:px-2  xl:py-1.5 lg:gap-2 xl:gap-2 rounded-xl hover:bg-white/10" onClick={()=>navigate(`/profile/${userData._id}`)}>
           <CgProfile size={20} />
           <h1 className="">Profile</h1>
