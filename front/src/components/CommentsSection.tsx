@@ -1,12 +1,12 @@
 import axios from "axios";
-import { url } from "../../App";
+import { url } from "../App";
 import { useEffect, useState, type FC } from "react";
 import moment from "moment";
 import { CiMenuKebab } from "react-icons/ci";
-import type { menuType } from "../MessageBox";
+import type { menuType } from "./MessageBox";
 import { useDispatch, useSelector } from "react-redux";
-import type { RootState } from "../../store/reduxStore";
-import { deleteComment, editComment, InitializeComment } from "../../store/commentSlice";
+import type { RootState } from "../store/reduxStore";
+import { deleteComment, editComment, InitializeComment } from "../store/commentSlice";
 type property = {
   postId: string;
 };

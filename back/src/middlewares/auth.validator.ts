@@ -61,10 +61,6 @@ export const forgotValidator = [
 ];
 
 export const resetValidator = [
-  body("email")
-    .optional()
-    .isEmail()
-    .withMessage("invalid email address"),
   body("password")
     .isLength({ min: 3, max:20 })
     .withMessage("password must be atleast 6 characters long")
@@ -75,11 +71,6 @@ export const resetValidator = [
     .withMessage("password must be atleast 6 characters long")
     .notEmpty()
     .withMessage("New password is required"),
-  body("confirmPassword")
-    .isLength({ min: 3, max:20 })
-    .withMessage("password must be atleast 6 characters long")
-    .notEmpty()
-    .withMessage("Confirm password is required"),
   handleValidationErrors,
 ];
 

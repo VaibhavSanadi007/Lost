@@ -4,13 +4,15 @@ import postReducer from './postSlice.jsx'
 import chatReducer from './chatSlice.jsx';
 import commentReducer from './commentSlice.tsx';
 import chatAIReducer from './aiSlice.tsx';
+import storyReducer from './StorySlice.tsx';
 export const store = configureStore({
   reducer:{
     user : userReducer,
     post : postReducer,
     chat : chatReducer,
     comment : commentReducer,
-    aichat : chatAIReducer
+    aichat : chatAIReducer,
+    story : storyReducer
   }
 })
 

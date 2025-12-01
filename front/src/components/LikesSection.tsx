@@ -1,5 +1,5 @@
 import axios from "axios";
-import { url } from "../../App";
+import { url } from "../App";
 import { useEffect, useState, type FC } from "react";
 import { BiSolidLike } from "react-icons/bi";
 type property = {

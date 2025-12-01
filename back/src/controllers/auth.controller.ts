@@ -131,18 +131,12 @@ export const authLogOut = async (req: Request, res: Response) => {
 };
 
 export const authReset = async (req: Request, res: Response) => {
-  const { password, newPassword, confirmPassword } = req.body;
+  const { password, newPassword } = req.body;
 
-  if (newPassword !== confirmPassword) {
+  if (newPassword == password) {
     return res
       .status(400)
-      .json({ message: "newpassword and confirmpassword are different" });
-  }
-
-  if (password == confirmPassword) {
-    return res
-      .status(400)
-      .json({ message: "password and confirmpassword should be different" });
+      .json({ message: "newpassword and confirmpassword should be different" });
   }
 
   const userPass = await userModel.findOne({
@@ -155,7 +149,7 @@ export const authReset = async (req: Request, res: Response) => {
     return res.status(400).json({ message: "password is invalid" });
   }
 
-  const hashPassword = await bcrypt.hash(confirmPassword, saltRounds);
+  const hashPassword = await bcrypt.hash(newPassword, saltRounds);
 
   const UpdatePassword = await userModel.findByIdAndUpdate(
     req.user?._id,

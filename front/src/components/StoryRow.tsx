@@ -4,21 +4,15 @@ import defaulticon from '../assets/default_profile_pic.jpg';
 import StoryView from "./StoryView";
 import { url } from "../App";
 import axios from "axios";
-import type { ObjType } from "../store/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setStories } from "../store/StorySlice";
+import type { RootState } from "../store/reduxStore";
 
 type property = {
   setStoryModalFlag: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-type storyObj = {
-  ownerId: ObjType;
-  mediaUrl?: string;
-  storytype: "image" | "video" | "text";
-  storytext?: string;
-  duration?: number;
-  createdAt: Date;
-  expiresAt: Date;
-};
+
 
 type storydatatype = {
   mediaUrl?: string;
@@ -29,21 +23,19 @@ type storydatatype = {
 
 const StoryRow: FC<property> = ({ setStoryModalFlag }) => {
  const [storyOpen,setStoryOpen] = useState(false);
+ const dispatch = useDispatch();
+const story = useSelector((i:RootState)=> i.story);
+console.log(story);
+console.log("ff",story);
 
-   const [storyItem, setStoryItem] = useState<storyObj[]>([]);
-   const [storyData,setStoryData] = useState<storydatatype>({
-  mediaUrl: '',
-  storytype: 'image',
-  storytext: '',
-  duration: 5
-   });
+   const [storyData,setStoryData] = useState<storydatatype[]>([]);
  
   const handleGetStory = async () => {
     const { data } = await axios.get(`${url}/story/getStory`, {
       withCredentials: true,
     });
-
-    setStoryItem(data.data);
+    console.log(data)
+    dispatch(setStories(data.data));
   };
 
   useEffect(() => {
@@ -69,23 +61,18 @@ const StoryRow: FC<property> = ({ setStoryModalFlag }) => {
 
         {/* array of stories */}
         {
-          storyItem && storyItem.map((item,index)=>(
+          story && story.map((item,index)=>(
 
         <div key={index}
-          onClick={()=>{setStoryOpen(true); setStoryData({
-            mediaUrl: item.mediaUrl,
-          storytype: item.storytype,
-          storytext: item.storytext ? item.storytext : '',
-          duration: item.duration
-          })}}
+          onClick={()=>{setStoryOpen(true); setStoryData(item)}}
           className={`w-15 h-20 xl:w-20 xl:h-25 rounded-2xl border border-gray-300 relative cursor-pointer p-2 flex items-end justify-center active:scale-98 flex-shrink-0`}
           style={{
-          backgroundImage: `url(${item.ownerId.dp || defaulticon})`,
+          backgroundImage: `url(${item[0].ownerId.dp || defaulticon})`,
           backgroundPosition: `center`,
           backgroundRepeat: `no-repeat`,
           backgroundSize: `cover`,
           }} >
-          <h1 className=" border-b border-b-gray-300 text-[0.7rem] text-white">{item.ownerId.name.split(" ").slice(0,1)}</h1>
+          <h1 className=" border-b border-b-gray-300 text-[0.7rem] text-white">{item[0].ownerId.name.split(" ").slice(0,1)}</h1>
         </div>  
           ))
         }
