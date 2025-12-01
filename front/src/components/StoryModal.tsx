@@ -3,14 +3,19 @@ import {  useState, type FC } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
 import { MdOutlineFileUpload } from "react-icons/md";
 import { url } from "../App";
+import { useDispatch, useSelector } from "react-redux";
+import { addStory } from "../store/StorySlice";
+import type { RootState } from "../store/reduxStore";
 
 type property = {
   setStoryModalFlag: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const StoryModal: FC<property> = ({ setStoryModalFlag }) => {
+  const userData = useSelector((item:RootState)=> item.user);
   const [file,setFile] = useState<File | null>(null);
   const [Text,setText] = useState<string>('');
+  const dispatch = useDispatch();
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>)=>{
     if( e.target.files && e.target.files?.length>0){
@@ -25,7 +30,16 @@ const StoryModal: FC<property> = ({ setStoryModalFlag }) => {
       duration: 5,
     },{
       withCredentials: true,
-    })
+    });
+dispatch(addStory({
+    ownerId:{
+      dp:userData.dp,
+      name: userData.name,
+      _id:userData._id},
+    storytype: "text",
+    storytext: Text,
+    duration: 5
+}));  
   }
 
   const handleUploadFile = async ()=>{
@@ -41,6 +55,15 @@ const StoryModal: FC<property> = ({ setStoryModalFlag }) => {
       }
     });
 
+    dispatch(addStory({
+     ownerId:{
+      dp:userData.dp,
+      name: userData.name,
+      _id:userData._id},
+    mediaUrl: URL.createObjectURL(file),
+    storytype: file.type.startsWith( 'image',0) ? "image":"video",
+    duration: 5
+}));  
   }
 
   const handleUpload = ()=>{

@@ -41,7 +41,6 @@ const SignUp = () => {
     dispatch(addUser(data.data));
     navigate("/home");
     }  catch (err:any) {
-      console.log("Error :",err);
       toast.error(err.response.data.message)
     }
   };
@@ -51,7 +50,6 @@ const SignUp = () => {
       window.location.href = `${url}/auth/google`;
       
     }  catch (err:any) {
-      console.log("Error :",err);
       toast.error(err.response.data.message)
     }
   };

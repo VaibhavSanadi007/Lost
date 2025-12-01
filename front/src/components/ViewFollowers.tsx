@@ -9,7 +9,6 @@ type property = {
 }
 
 const ViewFollowers:FC<property> = ({setopenFollowers , followData}) => {
-    console.log("followData",followData);
   return (
     <div className="fixed  inset-0 z-50 flex  justify-center xl:pt-30" >
       {/* Backdrop */}

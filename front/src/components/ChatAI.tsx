@@ -42,7 +42,6 @@ const ChatAI = () => {
     socketRef.current = socket;
 
     socket.on("ai-message", (data) => {
-      console.log(data);
       dispatch(
         addMessage({
           user: myid,

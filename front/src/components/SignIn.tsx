@@ -43,7 +43,6 @@ const SignIn = () => {
     navigate("/home");
  
     } catch (err:any) {
-      console.log("Error :",err);
       toast.error(err.response.data.message)
     }
   };
@@ -52,7 +51,6 @@ const SignIn = () => {
     try {
       window.location.href = `${url}/auth/google`;
     }  catch (err:any) {
-      console.log("Error :",err);
       toast.error(err.response.data.message)
     }
   };

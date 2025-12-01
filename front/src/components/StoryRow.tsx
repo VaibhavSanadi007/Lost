@@ -25,8 +25,7 @@ const StoryRow: FC<property> = ({ setStoryModalFlag }) => {
  const [storyOpen,setStoryOpen] = useState(false);
  const dispatch = useDispatch();
 const story = useSelector((i:RootState)=> i.story);
-console.log(story);
-console.log("ff",story);
+
 
    const [storyData,setStoryData] = useState<storydatatype[]>([]);
  
@@ -34,7 +33,6 @@ console.log("ff",story);
     const { data } = await axios.get(`${url}/story/getStory`, {
       withCredentials: true,
     });
-    console.log(data)
     dispatch(setStories(data.data));
   };
 
