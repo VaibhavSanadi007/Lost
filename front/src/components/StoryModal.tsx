@@ -86,7 +86,7 @@ dispatch(addStory({
         </div>
         <textarea
         onChange={(e)=>setText(e.target.value)}
-          defaultValue="whats on your mind today?"
+          placeholder="whats on your mind today?"
           className="rounded-2xl bg-black/10 backdrop-blur-xl resize-none outline-none h-[40%] w-full p-3 overflow-x-auto scrollbar-hide"
         />
 
