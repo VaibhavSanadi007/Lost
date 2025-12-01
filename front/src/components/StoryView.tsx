@@ -24,7 +24,6 @@ type property = {
 const StoryView: FC<property> = ({ setStoryOpen, storyData }) => {
 
   const [currentIdx,setCurrentIdx] = useState(0);
-  console.log(currentIdx)
 
   useEffect(() => {
     if (!storyData) return;
@@ -36,7 +35,7 @@ const StoryView: FC<property> = ({ setStoryOpen, storyData }) => {
     return () => {
       clearTimeout(storyTimeId);
     };
-  }, [storyData]);
+  }, [storyData,currentIdx]);
 
   const handlePrev = (e:any)=>{
     e.stopPropagation();
