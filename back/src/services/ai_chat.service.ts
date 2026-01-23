@@ -7,7 +7,7 @@ export async function generateResponse(problem:any) {
     model: "gemini-2.5-flash",
     contents: problem,
     config:{
-      temperature:0.7,
+      temperature:0.5,
       systemInstruction:"act like your a best friend and entusiastic person and give only short answer just 2 or 3 line answer and also greet them if they greet you "
     }
   });

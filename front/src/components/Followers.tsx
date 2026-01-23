@@ -1,8 +1,11 @@
 import type { FC } from "react"
-import {  useSelector } from "react-redux";
+import {  useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../store/reduxStore";
 import defaultIcon from '../assets/default_profile_pic.jpg';
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { url } from "../App";
+import { removefollower } from "../store/userSlice";
 
 
 type property = {
@@ -13,7 +16,15 @@ const Followers:FC<property> = ({setopenFollowers}) => {
 
   const navigate = useNavigate();
 
+  const dispatch = useDispatch();
+
   const followData = useSelector((item:RootState)=>item.user.followers);
+
+    const handleUnFollowUser = async (userId:string,id:string) => {
+     await axios.delete(`${url}/user/removefollower/${userId}`,{withCredentials:true}).then(()=>{
+      dispatch(removefollower(id));
+     });
+    }
 
   return (
     <div className="fixed  inset-0 z-50 flex  justify-center xl:pt-30" >
@@ -42,7 +53,7 @@ const Followers:FC<property> = ({setopenFollowers}) => {
         </div>
 
               
-        <h1 className=" cursor-pointer active:scale-95 xl:px-1.5 xl:py-1.5 rounded border bg-black  text-gray-200">remove</h1>
+        <h1 className=" cursor-pointer active:scale-95 xl:px-1.5 xl:py-1.5 rounded border bg-black  text-gray-200" onClick={()=>handleUnFollowUser(items.followingId._id,items._id)}>remove</h1>
        </div>
                                     
           ))

@@ -187,7 +187,13 @@ export const authForgot = async (req: Request, res: Response) => {
 };
 
 export const authDeleteAccount = async (req: Request, res: Response) => {
-  const userId = req.user?._id;
+  try{const userId = req.user?._id;
+
+  console.log(req.user)
+
+  if(!userId){
+   return res.send("No user id peresent while deletion of the account")
+  }
 
   const postOfUser = await postModel.find({postUserId:userId}).select(`postId`);
 
@@ -229,6 +235,13 @@ export const authDeleteAccount = async (req: Request, res: Response) => {
   res.status(200).json({
     message: "account deleted successfully",
   });
+}catch (error) {
+    console.error("DELETE ACCOUNT ERROR:", error);
+
+    return res.status(500).json({
+      message: "Failed to delete account",
+    });
+  }
 };
 
 export const authPrivacyAccount = async (req: Request, res: Response) => {

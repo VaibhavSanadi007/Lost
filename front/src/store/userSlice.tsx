@@ -61,9 +61,14 @@ const userSlice = createSlice({
       state.following = state.following.filter((items)=>{
        return items._id !== action.payload;
       })
+    },
+    removefollower: (state,action) => {
+      state.followers = state.followers.filter((items)=>{
+        return items._id !== action.payload;
+      })
     }
   },
 });
 
-export const { addUser , addFollower , addFollowing , unfollowuser } = userSlice.actions;
+export const { addUser , addFollower , addFollowing , unfollowuser , removefollower } = userSlice.actions;
 export default userSlice.reducer;

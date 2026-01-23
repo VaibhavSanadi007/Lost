@@ -42,7 +42,7 @@ const OpenPostModal: FC<property> = ({ setOpenPostModal , postId , postUrl , pos
       className=" w-full h-full fixed inset-0 bg-black/80 backdrop-blur flex items-center justify-center "
       onClick={() => setOpenPostModal(false)}
     >
-      <div className="xl:w-[40%] absolute  bg-white/10  rounded-xl xl:py-5 xl:px-10 flex flex-col xl:gap-1.5 justify-between  " onClick={(e)=>{
+      <div className="xl:w-[37%] absolute  bg-white  rounded-xl xl:py-5 xl:px-10 flex flex-col xl:gap-2.5 justify-between  " onClick={(e)=>{
         e.stopPropagation();
       }}>
 
@@ -57,7 +57,7 @@ const OpenPostModal: FC<property> = ({ setOpenPostModal , postId , postUrl , pos
         <button className="text-white bg-red-500 rounded active:scale-95 xl:px-2 xl:py-1 cursor-pointer " onClick={() =>{ 
           handleDeletePost();
           setOpenPostModal(false)}} >Delete</button>
-          <button className="text-white border border-white/10 rounded active:scale-95 xl:px-2 xl:py-1 cursor-pointer " onClick={() =>{ 
+          <button className="hover:bg-blue-100 duration-200 border border-black rounded active:scale-95 xl:px-2 xl:py-1 cursor-pointer " onClick={() =>{ 
             handleEditPost();
             setOpenPostModal(false)
             }} >Save</button>
@@ -66,7 +66,7 @@ const OpenPostModal: FC<property> = ({ setOpenPostModal , postId , postUrl , pos
         </div>
 
 
-      <div className=" h-100 w-full flex items-center justify-center xl:py-4 xl:px-2">
+      <div className=" h-100 w-full flex items-center justify-center xl:py-4 xl:px-2 border rounded">
         <label htmlFor="Img" className="xl:h-full">
         <img src={postUrl?postUrl : defaIcon} className=" xl:h-full object-contain"/>
         </label>
@@ -74,9 +74,9 @@ const OpenPostModal: FC<property> = ({ setOpenPostModal , postId , postUrl , pos
       </div>
 
        
-        <div className="flex flex-col xl:gap-2 text-white/50">
-          <textarea name="" value={description} id="" className="border border-white/10 rounded resize-none scrollbar-hide outline-none xl:px-2 xl:py-1" placeholder="Edit description..." onChange={(e)=>setdescription(e.target.value)}></textarea>
-          <textarea name="" value={tags} id="" className="border border-white/10 rounded  resize-none scrollbar-hide outline-none xl:px-2 xl:py-1" placeholder="Edit tags..." onChange={(e)=>settags(e.target.value)}></textarea>
+        <div className="flex flex-col xl:gap-2 ">
+          <textarea name="" value={description} id="" className="border border-black rounded resize-none scrollbar-hide outline-none xl:px-2 xl:py-1 text-gray-600" placeholder="Edit description..." onChange={(e)=>setdescription(e.target.value)}></textarea>
+          <textarea name="" value={tags} id="" className="border border-black rounded resize-none scrollbar-hide outline-none xl:px-2 xl:py-1 text-gray-600" placeholder="Edit tags..." onChange={(e)=>settags(e.target.value)}></textarea>
         </div>
 
       </div>

@@ -1,4 +1,4 @@
-import { json, Request, Response } from "express";
+import {  Request, Response } from "express";
 import userModel, { IUser } from "../models/user.model.js";
 import redis from "../databases/redis.js";
 import followModel from "../models/follow.model.js";
@@ -172,6 +172,35 @@ export const UnfollowUser = async (req: Request, res: Response) => {
     const followData = await followModel.findOneAndDelete({
       followerId: userId,
       followingId: req.user?._id,
+    });
+
+    const data = await followData?.populate(
+      "followingId followerId",
+      "_id username"
+    );
+
+    return res.status(200).json({ message: "Unfollow successfull", data });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+export const RemoveFollower = async (req: Request, res: Response) => {
+  try {
+    const userId = req.params.id;
+
+    const isUserExist = await followModel.findOne({
+      followerId: req.user?._id,
+      followingId: userId,
+    });
+
+    if (!isUserExist) {
+      return res.status(400).json({ message: "already Removed the user" });
+    }
+
+    const followData = await followModel.findOneAndDelete({
+      followerId: req.user?._id,
+      followingId: userId,
     });
 
     const data = await followData?.populate(
